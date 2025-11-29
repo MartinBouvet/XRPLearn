@@ -21,7 +21,7 @@ Objectif : Créer un sentiment de groupe et d'excitation avant le départ simult
 Concept : La différence entre Clé Publique (Adresse) et Clé Privée (Secret).
 
 
-Zone Jeu (Gauche) : Mécanique du Cryptex.
+Zone Jeu (Gauche)
 
 L'utilisateur voit deux cartes correspondant à ses deux clés dans son portefeuille.
 
