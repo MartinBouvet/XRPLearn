@@ -5,6 +5,11 @@ export function WalletIcon({ color = "blue", size = "md", className = "" }) {
         green: "fill-green-500",
         purple: "fill-purple-500",
         gold: "fill-yellow-500",
+        slate: "fill-slate-500",
+        stone: "fill-stone-500",
+        indigo: "fill-indigo-500",
+        emerald: "fill-emerald-500",
+        amber: "fill-amber-500",
     };
 
     const sizes = {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Wallet, Client } from "xrpl";
+import { Wallet, Client, convertStringToHex } from "xrpl";
 import { Card } from "../../../components/Card";
 import { WalletIcon } from "../../../components/WalletIcon";
 import { ExplorerSidebar } from "../../../components/ExplorerSidebar";
@@ -32,13 +32,15 @@ const QUESTIONS = [
 
 export default function Level1() {
     const router = useRouter();
-    const [step, setStep] = useState("intro"); // intro, game, customization, generating, success, faucet
+    // Flow: intro -> customization -> generating -> success -> faucet -> faucet_done -> game -> quiz_success -> level_complete
+    const [step, setStep] = useState("intro");
     const [wallet, setWallet] = useState(null);
     const [feedback, setFeedback] = useState("");
     const [balance, setBalance] = useState(0);
     const [walletColor, setWalletColor] = useState("slate");
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [logs, setLogs] = useState([]);
+    const [isMinting, setIsMinting] = useState(false);
 
     const addLog = (message, type = "info", hash = null) => {
         const time = new Date().toLocaleTimeString();
@@ -63,26 +65,43 @@ export default function Level1() {
         setStep("success");
     };
 
-    const handleCardClick = (type) => {
-        const currentQuestion = QUESTIONS[currentQuestionIndex];
+    const mintBadge = async (badgeName, uri) => {
+        if (!wallet) return;
+        setIsMinting(true);
+        addLog(`Minting '${badgeName}' Badge...`, "tx");
 
-        if (type === currentQuestion.answer) {
-            setFeedback(currentQuestion.explanation);
+        const client = new Client("wss://s.altnet.rippletest.net:51233");
+        try {
+            await client.connect();
 
-            setTimeout(() => {
-                setFeedback("");
-                if (currentQuestionIndex < QUESTIONS.length - 1) {
-                    setCurrentQuestionIndex(prev => prev + 1);
-                } else {
-                    setStep("customization");
-                }
-            }, 2000);
-        } else {
-            setFeedback("Oops, wrong card! Try the other one.");
+            const transactionBlob = {
+                TransactionType: "NFTokenMint",
+                Account: wallet.address,
+                URI: convertStringToHex(uri),
+                Flags: 8, // tfTransferable
+                NFTokenTaxon: 0,
+            };
+
+            const tx = await client.submitAndWait(transactionBlob, { wallet: wallet });
+
+            if (tx.result.meta.TransactionResult === "tesSUCCESS") {
+                addLog(`Badge '${badgeName}' Minted!`, "success", tx.result.hash);
+                return true;
+            } else {
+                addLog(`Minting Failed: ${tx.result.meta.TransactionResult}`, "error");
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+            addLog(`Minting Error: ${error.message}`, "error");
+            return false;
+        } finally {
+            await client.disconnect();
+            setIsMinting(false);
         }
     };
 
-    const handleFaucet = async () => {
+    const handleFaucetAndBadge1 = async () => {
         setStep("faucet_loading");
         addLog("Connecting to XRPL Testnet...", "net");
 
@@ -102,25 +121,52 @@ export default function Level1() {
 
             setBalance(newBalance);
 
-            // Simulate NFT Badge Minting (Now that wallet is funded)
-            addLog("Minting 'Key Keeper' Badge...", "tx");
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            // In a real app, we would use client.submitAndWait(NFTokenMint...)
-            addLog("Badge Minted Successfully!", "success", "NFT-TOKEN-ID-001");
+            await client.disconnect(); // Disconnect before minting to ensure clean state or reuse connection if refactored
 
-            setStep("faucet_done");
+            // Mint Badge 1: Wallet Creator
+            const success = await mintBadge("Wallet Creator", "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi");
+
+            if (success) {
+                setStep("faucet_done");
+            } else {
+                // Even if minting fails, we proceed but log error
+                setStep("faucet_done");
+            }
+
         } catch (error) {
             console.error(error);
             addLog(`Error: ${error.message}`, "error");
             // Fallback for demo if network fails
             setBalance(1000);
             setStep("faucet_done");
-        } finally {
-            if (client.isConnected()) {
-                await client.disconnect();
-                addLog("Disconnected from Testnet", "net");
-            }
         }
+    };
+
+    const handleCardClick = (type) => {
+        const currentQuestion = QUESTIONS[currentQuestionIndex];
+
+        if (type === currentQuestion.answer) {
+            setFeedback(currentQuestion.explanation);
+
+            setTimeout(() => {
+                setFeedback("");
+                if (currentQuestionIndex < QUESTIONS.length - 1) {
+                    setCurrentQuestionIndex(prev => prev + 1);
+                } else {
+                    // Quiz Finished
+                    handleQuizSuccess();
+                }
+            }, 2000);
+        } else {
+            setFeedback("Oops, wrong card! Try the other one.");
+        }
+    };
+
+    const handleQuizSuccess = async () => {
+        setStep("quiz_success");
+        // Mint Badge 2: Quiz Master
+        const success = await mintBadge("Quiz Master", "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi");
+        setStep("level_complete");
     };
 
     // Sober colors
@@ -141,17 +187,14 @@ export default function Level1() {
                         className="bg-blue-500 h-4 rounded-full transition-all duration-500"
                         style={{
                             width:
-                                step === "intro"
-                                    ? "10%"
-                                    : step === "game"
-                                        ? `${30 + (currentQuestionIndex / QUESTIONS.length) * 15}%`
-                                        : step === "customization"
-                                            ? "45%"
-                                            : step === "generating"
-                                                ? "60%"
-                                                : step === "success"
-                                                    ? "80%"
-                                                    : "100%",
+                                step === "intro" ? "5%" :
+                                    step === "customization" ? "15%" :
+                                        step === "generating" ? "25%" :
+                                            step === "success" ? "35%" :
+                                                step === "faucet_loading" ? "45%" :
+                                                    step === "faucet_done" ? "55%" :
+                                                        step === "game" ? `${60 + (currentQuestionIndex / QUESTIONS.length) * 30}%` :
+                                                            "100%",
                         }}
                     ></div>
                 </div>
@@ -164,71 +207,11 @@ export default function Level1() {
                             This is called a <strong>Wallet</strong>.
                         </p>
                         <button
-                            onClick={() => {
-                                setCurrentQuestionIndex(0);
-                                setStep("game");
-                            }}
+                            onClick={() => setStep("customization")}
                             className="btn-primary text-xl"
                         >
-                            Got it, let's go!
+                            Start Mission
                         </button>
-                    </div>
-                )}
-
-                {step === "game" && QUESTIONS[currentQuestionIndex] && (
-                    <div className="text-center w-full max-w-4xl z-10 flex flex-col items-center">
-                        <h2 className="text-3xl font-bold mb-4">
-                            Question {currentQuestionIndex + 1}/{QUESTIONS.length}
-                        </h2>
-                        <p className="text-2xl mb-12 text-yellow-400 font-bold min-h-[4rem]">
-                            "{QUESTIONS[currentQuestionIndex].text}"
-                        </p>
-
-                        {/* Visual Wallet Container */}
-                        <div className="relative w-[600px] h-[300px] mt-10">
-                            {/* Back of Wallet */}
-                            <div className="absolute bottom-0 left-0 w-full h-48 bg-gray-800 rounded-b-3xl border-b-4 border-x-4 border-gray-600 shadow-2xl"></div>
-
-                            {/* Cards Container - Positioned to look like they are inside */}
-                            <div className="absolute bottom-10 left-0 w-full flex justify-center gap-16 px-10">
-                                {/* Public Key Card */}
-                                <div
-                                    onClick={() => handleCardClick("public")}
-                                    className="w-48 h-64 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl border-2 border-blue-400 shadow-xl cursor-pointer transform transition-all duration-300 hover:-translate-y-16 hover:rotate-[-5deg] hover:z-20 z-10 flex flex-col items-center justify-center p-4 group"
-                                >
-                                    <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">📢</div>
-                                    <h3 className="text-xl font-bold text-white mb-2">Public Address</h3>
-                                    <div className="w-full h-2 bg-blue-900/50 rounded mb-2"></div>
-                                    <div className="w-2/3 h-2 bg-blue-900/50 rounded"></div>
-                                    <p className="text-xs text-blue-200 mt-4">rAddress...</p>
-                                </div>
-
-                                {/* Private Key Card */}
-                                <div
-                                    onClick={() => handleCardClick("private")}
-                                    className="w-48 h-64 bg-gradient-to-br from-red-600 to-red-800 rounded-xl border-2 border-red-400 shadow-xl cursor-pointer transform transition-all duration-300 hover:-translate-y-16 hover:rotate-[5deg] hover:z-20 z-10 flex flex-col items-center justify-center p-4 group"
-                                >
-                                    <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">🔑</div>
-                                    <h3 className="text-xl font-bold text-white mb-2">Private Address</h3>
-                                    <div className="w-full h-2 bg-red-900/50 rounded mb-2"></div>
-                                    <div className="w-2/3 h-2 bg-red-900/50 rounded"></div>
-                                    <p className="text-xs text-red-200 mt-4">sSecret...</p>
-                                </div>
-                            </div>
-
-                            {/* Front of Wallet (Overlay to create depth) */}
-                            <div className="absolute bottom-0 left-0 w-full h-24 bg-gray-700/90 backdrop-blur-sm rounded-b-3xl border-b-4 border-x-4 border-gray-500 pointer-events-none z-30">
-                                <div className="w-full h-full flex items-center justify-center opacity-20">
-                                    <span className="text-4xl font-bold tracking-widest">WALLET</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {feedback && (
-                            <div className="mt-12 text-xl font-bold animate-bounce bg-gray-800/80 px-6 py-3 rounded-full border border-white/20 backdrop-blur-md z-40">
-                                {feedback}
-                            </div>
-                        )}
                     </div>
                 )}
 
@@ -305,70 +288,157 @@ export default function Level1() {
                         </div>
 
                         <button
-                            onClick={() => setStep("faucet")}
+                            onClick={handleFaucetAndBadge1}
                             className="btn-primary w-full"
                         >
-                            Claim my initial funds
+                            Activate Wallet & Claim Badge
                         </button>
                     </div>
                 )}
 
-                {(step === "faucet" || step === "faucet_loading" || step === "faucet_done") && (
+                {(step === "faucet_loading") && (
                     <div className="text-center w-full max-w-2xl z-10">
-                        <h2 className="text-3xl font-bold mb-8">The Faucet</h2>
-
+                        <h2 className="text-3xl font-bold mb-8">Activating Wallet...</h2>
                         <div className="flex justify-center items-end gap-4 mb-8 h-48">
                             <div className="text-6xl animate-bounce" style={{ animationDuration: '3s' }}>🚰</div>
-                            {step === "faucet_loading" && (
-                                <div className="flex flex-col gap-2">
-                                    <div className="w-4 h-4 bg-yellow-400 rounded-full animate-bounce delay-100"></div>
-                                    <div className="w-4 h-4 bg-yellow-400 rounded-full animate-bounce delay-200"></div>
-                                    <div className="w-4 h-4 bg-yellow-400 rounded-full animate-bounce delay-300"></div>
-                                </div>
-                            )}
-                            <WalletIcon color={walletColor} size="lg" className={step === "faucet_done" ? "scale-110 transition-transform" : ""} />
+                            <div className="flex flex-col gap-2">
+                                <div className="w-4 h-4 bg-yellow-400 rounded-full animate-bounce delay-100"></div>
+                                <div className="w-4 h-4 bg-yellow-400 rounded-full animate-bounce delay-200"></div>
+                                <div className="w-4 h-4 bg-yellow-400 rounded-full animate-bounce delay-300"></div>
+                            </div>
+                            <WalletIcon color={walletColor} size="lg" />
+                        </div>
+                        <div className="animate-pulse text-yellow-400 text-xl">
+                            {isMinting ? "Minting 'Wallet Creator' Badge..." : "Funding Account..."}
+                        </div>
+                    </div>
+                )}
+
+                {step === "faucet_done" && (
+                    <div className="text-center w-full max-w-2xl z-10">
+                        <h2 className="text-3xl font-bold mb-8 text-yellow-400">Wallet Activated!</h2>
+
+                        <div className="mb-8 animate-bounce">
+                            <div className="inline-block bg-gradient-to-r from-blue-600 to-blue-800 border border-blue-500 rounded-xl px-8 py-4 text-white font-bold shadow-lg transform hover:scale-105 transition-transform cursor-pointer">
+                                <div className="text-3xl mb-2">🛡️</div>
+                                <div className="text-xl">Badge Received</div>
+                                <div className="text-sm text-blue-200">"Wallet Creator"</div>
+                            </div>
                         </div>
 
-                        {step === "faucet" && (
-                            <button
-                                onClick={handleFaucet}
-                                className="btn-primary w-full"
-                            >
-                                Open the faucet (100 Yellow Coins)
-                            </button>
-                        )}
+                        <p className="text-xl mb-8">
+                            Now that you have a wallet, let's learn how to use it safely.
+                        </p>
 
-                        {step === "faucet_loading" && (
-                            <div className="animate-pulse text-yellow-400 text-xl">
-                                Filling the safe... 💰
-                            </div>
-                        )}
+                        <button
+                            onClick={() => setStep("game")}
+                            className="btn-primary w-full"
+                        >
+                            Start Training
+                        </button>
+                    </div>
+                )}
 
-                        {step === "faucet_done" && (
-                            <div className="animate-fade-in">
-                                <div className="text-5xl font-bold text-yellow-400 mb-4">
-                                    +{balance} Yellow Coins
-                                </div>
-                                <p className="text-gray-300 mb-8">
-                                    "Your {colors.find(c => c.id === walletColor)?.name} safe is full!"
-                                </p>
+                {step === "game" && QUESTIONS[currentQuestionIndex] && (
+                    <div className="text-center w-full max-w-4xl z-10 flex flex-col items-center">
+                        <h2 className="text-3xl font-bold mb-4">
+                            Question {currentQuestionIndex + 1}/{QUESTIONS.length}
+                        </h2>
+                        <p className="text-2xl mb-12 text-yellow-400 font-bold min-h-[4rem]">
+                            "{QUESTIONS[currentQuestionIndex].text}"
+                        </p>
 
-                                <div className="mb-8 animate-bounce">
-                                    <div className="inline-block bg-gradient-to-r from-yellow-600 to-yellow-800 border border-yellow-500 rounded-xl px-8 py-4 text-white font-bold shadow-lg transform hover:scale-105 transition-transform cursor-pointer">
-                                        <div className="text-3xl mb-2">🏆</div>
-                                        <div className="text-xl">NFT Badge Received</div>
-                                        <div className="text-sm text-yellow-200">"Key Keeper"</div>
-                                    </div>
-                                </div>
+                        {/* Visual Wallet Container */}
+                        <div className="relative w-[600px] h-[300px] mt-10">
+                            {/* Back of Wallet */}
+                            <div className="absolute bottom-0 left-0 w-full h-48 bg-gray-800 rounded-b-3xl border-b-4 border-x-4 border-gray-600 shadow-2xl"></div>
 
-                                <button
-                                    className="btn-primary w-full bg-green-600 hover:bg-green-700"
-                                    onClick={() => alert("Level 2 coming soon!")}
+                            {/* Cards Container */}
+                            <div className="absolute bottom-10 left-0 w-full flex justify-center gap-16 px-10">
+                                {/* Public Key Card */}
+                                <div
+                                    onClick={() => handleCardClick("public")}
+                                    className="w-48 h-64 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl border-2 border-blue-400 shadow-xl cursor-pointer transform transition-all duration-300 hover:-translate-y-16 hover:rotate-[-5deg] hover:z-20 z-10 flex flex-col items-center justify-center p-4 group"
                                 >
-                                    Continue to Level 2
-                                </button>
+                                    <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">📢</div>
+                                    <h3 className="text-xl font-bold text-white mb-2">Public Address</h3>
+                                    <div className="w-full h-2 bg-blue-900/50 rounded mb-2"></div>
+                                    <div className="w-2/3 h-2 bg-blue-900/50 rounded"></div>
+                                    <p className="text-xs text-blue-200 mt-4">rAddress...</p>
+                                </div>
+
+                                {/* Private Key Card */}
+                                <div
+                                    onClick={() => handleCardClick("private")}
+                                    className="w-48 h-64 bg-gradient-to-br from-red-600 to-red-800 rounded-xl border-2 border-red-400 shadow-xl cursor-pointer transform transition-all duration-300 hover:-translate-y-16 hover:rotate-[5deg] hover:z-20 z-10 flex flex-col items-center justify-center p-4 group"
+                                >
+                                    <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">🔑</div>
+                                    <h3 className="text-xl font-bold text-white mb-2">Private Address</h3>
+                                    <div className="w-full h-2 bg-red-900/50 rounded mb-2"></div>
+                                    <div className="w-2/3 h-2 bg-red-900/50 rounded"></div>
+                                    <p className="text-xs text-red-200 mt-4">sSecret...</p>
+                                </div>
+                            </div>
+
+                            {/* Front of Wallet */}
+                            <div className="absolute bottom-0 left-0 w-full h-24 bg-gray-700/90 backdrop-blur-sm rounded-b-3xl border-b-4 border-x-4 border-gray-500 pointer-events-none z-30">
+                                <div className="w-full h-full flex items-center justify-center opacity-20">
+                                    <span className="text-4xl font-bold tracking-widest">WALLET</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {feedback && (
+                            <div className="mt-12 text-xl font-bold animate-bounce bg-gray-800/80 px-6 py-3 rounded-full border border-white/20 backdrop-blur-md z-40">
+                                {feedback}
                             </div>
                         )}
+                    </div>
+                )}
+
+                {(step === "quiz_success") && (
+                    <div className="text-center w-full max-w-2xl z-10">
+                        <h2 className="text-3xl font-bold mb-8">Training Complete!</h2>
+                        <div className="animate-pulse text-yellow-400 text-xl mb-8">
+                            Minting 'Quiz Master' Badge...
+                        </div>
+                        <div className="flex justify-center">
+                            <div className="animate-spin text-4xl">⚙️</div>
+                        </div>
+                    </div>
+                )}
+
+                {step === "level_complete" && (
+                    <div className="text-center w-full max-w-2xl z-10 animate-fade-in">
+                        <h2 className="text-4xl font-bold mb-6 text-green-400">
+                            Level 1 Complete! 🏆
+                        </h2>
+
+                        <div className="flex justify-center gap-8 mb-12">
+                            <div className="animate-bounce" style={{ animationDelay: "0s" }}>
+                                <div className="inline-block bg-gradient-to-r from-blue-600 to-blue-800 border border-blue-500 rounded-xl px-4 py-4 text-white font-bold shadow-lg">
+                                    <div className="text-3xl mb-2">🛡️</div>
+                                    <div className="text-sm">Wallet Creator</div>
+                                </div>
+                            </div>
+                            <div className="animate-bounce" style={{ animationDelay: "0.2s" }}>
+                                <div className="inline-block bg-gradient-to-r from-yellow-600 to-yellow-800 border border-yellow-500 rounded-xl px-4 py-4 text-white font-bold shadow-lg">
+                                    <div className="text-3xl mb-2">🎓</div>
+                                    <div className="text-sm">Quiz Master</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p className="text-gray-300 mb-8">
+                            You have successfully created a wallet, funded it, and learned the basics of keys.
+                        </p>
+
+                        <button
+                            className="btn-primary w-full bg-green-600 hover:bg-green-700"
+                            onClick={() => alert("Level 2 coming soon!")}
+                        >
+                            Continue to Level 2
+                        </button>
                     </div>
                 )}
             </div>
