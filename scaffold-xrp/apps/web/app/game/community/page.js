@@ -65,8 +65,21 @@ export default function Community() {
             if (res.ok) {
                 const data = await res.json();
                 if (data.isMock) setIsMock(true);
-                // Filter out self and duplicates (by address)
-                const uniqueMembers = Array.from(new Map(data.members.map(m => [m.address, m])).values());
+
+                // Deduplicate by NAME
+                const uniqueMembersMap = new Map();
+                data.members.forEach(m => {
+                    const existing = uniqueMembersMap.get(m.name);
+                    if (!existing) {
+                        uniqueMembersMap.set(m.name, m);
+                    } else {
+                        if (existing.address === "Pending..." && m.address !== "Pending...") {
+                            uniqueMembersMap.set(m.name, m);
+                        }
+                    }
+                });
+
+                const uniqueMembers = Array.from(uniqueMembersMap.values());
                 setMembers(uniqueMembers.filter(m => m.name !== myUsername));
             }
         } catch (error) {

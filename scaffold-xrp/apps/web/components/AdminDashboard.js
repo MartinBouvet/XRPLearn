@@ -31,11 +31,30 @@ function DashboardContent() {
             const res = await fetch("/api/community/members");
             if (res.ok) {
                 const data = await res.json();
-                // Filter duplicates
-                const uniqueMembers = Array.from(new Map(data.members.map(m => [m.address, m])).values());
 
-                // Fetch balances for each member
+                // Deduplicate by NAME (taking the latest entry if possible, or just one)
+                // Since the API returns a list, and we append to a Set, we might have duplicates if we don't clean up.
+                // We'll use a Map keyed by name to keep the latest one (assuming order or just uniqueness).
+                const uniqueMembersMap = new Map();
+                data.members.forEach(m => {
+                    // If we already have this name, check if the new one has a real address while the old one didn't
+                    const existing = uniqueMembersMap.get(m.name);
+                    if (!existing) {
+                        uniqueMembersMap.set(m.name, m);
+                    } else {
+                        // Prefer the one with a real address over "Pending..."
+                        if (existing.address === "Pending..." && m.address !== "Pending...") {
+                            uniqueMembersMap.set(m.name, m);
+                        }
+                    }
+                });
+                const uniqueMembers = Array.from(uniqueMembersMap.values());
+
+                // Fetch balances for each member (skip if Pending)
                 const membersWithBalances = await Promise.all(uniqueMembers.map(async (m) => {
+                    if (m.address === "Pending...") {
+                        return { ...m, balance: "Waiting for Wallet..." };
+                    }
                     try {
                         const client = new Client("wss://s.altnet.rippletest.net:51233");
                         await client.connect();

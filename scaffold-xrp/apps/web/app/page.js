@@ -33,6 +33,20 @@ export default function Home() {
     }
 
     try {
+      // 1. Register user immediately so they appear in Admin Dashboard
+      await fetch("/api/community/members", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: username,
+          address: "Pending...", // Placeholder until wallet is created in Level 1
+          avatar: "👤",
+          level: "0",
+          status: "joining"
+        })
+      });
+
+      // 2. Join Lobby (Legacy/Redis Set)
       const res = await fetch("/api/lobby/join", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -40,7 +54,6 @@ export default function Home() {
       });
 
       if (res.ok) {
-        // Store username in localStorage for persistence across pages if needed
         localStorage.setItem("xrpl_username", username);
         router.push("/lobby");
       } else {
