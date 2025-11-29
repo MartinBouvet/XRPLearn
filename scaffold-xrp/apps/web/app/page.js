@@ -56,6 +56,19 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 text-gray-900 dark:text-white relative overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      {/* Admin Access Button */}
+      <div className="absolute top-6 right-6 z-50">
+        <button
+          onClick={() => {
+            localStorage.setItem("xrpl_username", "admin");
+            router.push("/admin");
+          }}
+          className="bg-white/50 dark:bg-gray-900/50 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white px-4 py-2 rounded-lg font-mono text-xs border border-blue-200 dark:border-blue-500/30 hover:border-blue-400 backdrop-blur-md transition-all tracking-widest uppercase shadow-sm"
+        >
+          Admin_Mode
+        </button>
+      </div>
+
       <BlockchainBackground />
 
       <div className="max-w-md w-full relative z-20">
@@ -63,7 +76,7 @@ export default function Home() {
           <h1 className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 mb-4 glitch" data-text="XRPL OPERATOR">
             XRPL OPERATOR
           </h1>
-          <p className="text-xl text-blue-200 font-mono tracking-widest uppercase opacity-80">
+          <p className="text-xl text-blue-600 dark:text-blue-200 font-mono tracking-widest uppercase opacity-80">
             &lt; Initialize Sequence /&gt;
           </p>
         </div>
