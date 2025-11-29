@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { BlockchainBackground } from "../components/BlockchainBackground";
+
 export default function Home() {
   const [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,47 +48,77 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 text-white">
-      <div className="max-w-md w-full space-y-8 text-center">
-        <div>
-          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-2">
-            XRPL Operator
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 text-white relative overflow-hidden">
+      <BlockchainBackground />
+
+      <div className="max-w-md w-full relative z-20">
+        <div className="text-center mb-12">
+          <h1 className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 mb-4 glitch" data-text="XRPL OPERATOR">
+            XRPL OPERATOR
           </h1>
-          <p className="text-xl text-gray-400">Prêt à devenir un expert de la blockchain ?</p>
+          <p className="text-xl text-blue-200 font-mono tracking-widest uppercase opacity-80">
+            &lt; Initialize Sequence /&gt;
+          </p>
         </div>
 
-        <form onSubmit={handleJoin} className="mt-8 space-y-6 bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700">
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                Ton Pseudo
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-4 border border-gray-600 placeholder-gray-500 text-white bg-gray-700 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-lg text-center"
-                placeholder="Choisis ton Pseudo"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-          </div>
+        <div className="bg-gray-900/40 backdrop-blur-xl border border-blue-500/30 p-8 rounded-3xl shadow-[0_0_50px_rgba(0,170,228,0.2)] relative group">
+          {/* Corner Accents */}
+          <div className="absolute -top-1 -left-1 w-8 h-8 border-t-2 border-l-2 border-blue-500 rounded-tl-xl"></div>
+          <div className="absolute -top-1 -right-1 w-8 h-8 border-t-2 border-r-2 border-blue-500 rounded-tr-xl"></div>
+          <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-2 border-l-2 border-blue-500 rounded-bl-xl"></div>
+          <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-blue-500 rounded-br-xl"></div>
 
-          <div>
+          <form onSubmit={handleJoin} className="space-y-6">
+            <div className="space-y-2">
+              <label htmlFor="username" className="block text-sm font-mono text-blue-300 uppercase tracking-wider">
+                Identity Protocol
+              </label>
+              <div className="relative">
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  required
+                  className="w-full bg-gray-800/50 border border-blue-500/30 rounded-xl px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all font-mono text-lg text-center tracking-widest"
+                  placeholder="ENTER_CODENAME"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="off"
+                />
+                <div className="absolute inset-0 rounded-xl bg-blue-500/5 pointer-events-none"></div>
+              </div>
+            </div>
+
             <button
               type="submit"
               disabled={isLoading}
-              className={`group relative w-full flex justify-center py-4 px-4 border border-transparent text-lg font-medium rounded-md text-white ${isLoading
-                ? "bg-gray-600 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                } transition-all duration-200 transform hover:scale-105`}
+              className={`w-full relative overflow-hidden group py-4 px-6 rounded-xl font-bold text-lg tracking-wider uppercase transition-all duration-300 ${isLoading
+                  ? "bg-gray-700 cursor-not-allowed text-gray-400"
+                  : "bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.7)]"
+                }`}
             >
-              {isLoading ? "Connexion..." : "Rejoindre l'aventure 🚀"}
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {isLoading ? (
+                  <>Processing...</>
+                ) : (
+                  <>
+                    Connect to Ledger <span className="text-xl">→</span>
+                  </>
+                )}
+              </span>
+              {/* Button Glare Effect */}
+              {!isLoading && (
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"></div>
+              )}
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="text-xs text-gray-500 font-mono">
+            SYSTEM STATUS: <span className="text-green-400">ONLINE</span> | NODES: <span className="text-blue-400">ACTIVE</span>
+          </p>
+        </div>
       </div>
     </div>
   );

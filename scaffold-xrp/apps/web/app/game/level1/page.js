@@ -7,6 +7,8 @@ import { WalletIcon } from "../../../components/WalletIcon";
 import { ExplorerSidebar } from "../../../components/ExplorerSidebar";
 import { useRouter } from "next/navigation";
 
+import { TutorialPopup } from "../../../components/TutorialPopup";
+
 const QUESTIONS = [
     {
         text: "I want to receive funds from a friend. What do I give them?",
@@ -30,6 +32,84 @@ const QUESTIONS = [
     },
 ];
 
+const TUTORIAL_STEPS = {
+    intro: {
+        title: "Welcome to the Blockchain",
+        content: (
+            <>
+                <p className="mb-4">
+                    Welcome, initiate. You are about to enter the world of the <strong>XRPL Ledger</strong>.
+                </p>
+                <p>
+                    To interact with this digital world, you first need an identity. In the crypto world, this identity is called a <strong>Wallet</strong>.
+                    It's your personal vault that only you can control.
+                </p>
+            </>
+        )
+    },
+    customization: {
+        title: "Your Digital Vault",
+        content: (
+            <>
+                <p className="mb-4">
+                    A wallet is not a physical object, but a pair of cryptographic keys.
+                </p>
+                <p>
+                    Before we generate these keys mathematically, choose the appearance of your interface.
+                    This doesn't change how it works, but style matters!
+                </p>
+            </>
+        )
+    },
+    success: {
+        title: "Keys Generated!",
+        content: (
+            <>
+                <p className="mb-4">
+                    Congratulations! You have just generated a <strong>Keypair</strong>.
+                </p>
+                <ul className="list-disc pl-5 space-y-2">
+                    <li>
+                        <strong className="text-blue-400">Public Address (r...):</strong> Like your email address or IBAN. You can share this with anyone to receive funds.
+                    </li>
+                    <li>
+                        <strong className="text-red-400">Private Key (Secret):</strong> Like your password or PIN. <strong>NEVER</strong> share this. Anyone who has it controls your funds.
+                    </li>
+                </ul>
+            </>
+        )
+    },
+    faucet_done: {
+        title: "The Faucet",
+        content: (
+            <>
+                <p className="mb-4">
+                    Your wallet is now active! We used a <strong>Faucet</strong> to send you some test funds.
+                </p>
+                <p className="mb-4">
+                    On the XRPL, every account needs a small amount of XRP (the native currency) to be activated. This is called the <strong>Reserve</strong>.
+                </p>
+                <p>
+                    You also received your first <strong>NFT Badge</strong> (Non-Fungible Token) proving you completed this step.
+                </p>
+            </>
+        )
+    },
+    game: {
+        title: "Security Training",
+        content: (
+            <>
+                <p className="mb-4">
+                    Now that you have a wallet, you must learn to distinguish between what is public and what is private.
+                </p>
+                <p>
+                    I will ask you a series of questions. Use your new knowledge to choose the right card.
+                </p>
+            </>
+        )
+    }
+};
+
 export default function Level1() {
     const router = useRouter();
     // Flow: intro -> customization -> generating -> success -> faucet -> faucet_done -> game -> quiz_success -> level_complete
@@ -41,6 +121,20 @@ export default function Level1() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [logs, setLogs] = useState([]);
     const [isMinting, setIsMinting] = useState(false);
+    const [showTutorial, setShowTutorial] = useState(true);
+
+    // Reset tutorial when step changes, if there is a tutorial for that step
+    useEffect(() => {
+        if (TUTORIAL_STEPS[step]) {
+            setShowTutorial(true);
+        } else {
+            setShowTutorial(false);
+        }
+    }, [step]);
+
+    const handleTutorialNext = () => {
+        setShowTutorial(false);
+    };
 
     const addLog = (message, type = "info", hash = null) => {
         const time = new Date().toLocaleTimeString();
@@ -180,6 +274,12 @@ export default function Level1() {
 
     return (
         <main className="min-h-screen flex bg-gray-900 text-white">
+            <TutorialPopup
+                isOpen={showTutorial && !!TUTORIAL_STEPS[step]}
+                title={TUTORIAL_STEPS[step]?.title}
+                content={TUTORIAL_STEPS[step]?.content}
+                onNext={handleTutorialNext}
+            />
             <div className="flex-1 p-8 flex flex-col items-center justify-center overflow-hidden mr-80">
                 {/* Progress Bar */}
                 <div className="w-full max-w-4xl mb-8 bg-gray-700 rounded-full h-4 z-10">

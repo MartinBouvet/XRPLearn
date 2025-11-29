@@ -1,12 +1,15 @@
 import { WalletIcon } from "./WalletIcon";
+import { Tooltip } from "./Tooltip";
 
 export function ExplorerSidebar({ logs, wallet, balance }) {
     return (
         <div className="fixed right-0 top-0 h-full w-80 bg-gray-900 border-l border-gray-700 flex flex-col shadow-2xl z-50">
             <div className="p-4 border-b border-gray-700 bg-gray-900/50 backdrop-blur">
-                <h3 className="text-green-400 font-bold text-lg">
-                    &gt; XRPL Explorer
-                </h3>
+                <Tooltip content="This is the Ledger. It records every transaction permanently. In a real blockchain, this history is shared by thousands of computers.">
+                    <h3 className="text-green-400 font-bold text-lg cursor-help">
+                        &gt; XRPL Explorer
+                    </h3>
+                </Tooltip>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-3 font-mono text-sm">
@@ -18,8 +21,8 @@ export function ExplorerSidebar({ logs, wallet, balance }) {
                         <div className="flex justify-between text-xs text-gray-500 mb-1">
                             <span>{log.time}</span>
                             <span className={`font-bold ${log.type === 'tx' ? 'text-yellow-500' :
-                                    log.type === 'success' ? 'text-green-400' :
-                                        log.type === 'error' ? 'text-red-400' : 'text-blue-400'
+                                log.type === 'success' ? 'text-green-400' :
+                                    log.type === 'error' ? 'text-red-400' : 'text-blue-400'
                                 }`}>
                                 {log.type.toUpperCase()}
                             </span>
@@ -44,19 +47,23 @@ export function ExplorerSidebar({ logs, wallet, balance }) {
                     </div>
 
                     <div className="space-y-3">
-                        <div className="bg-gray-900/50 p-2 rounded border border-gray-700">
-                            <div className="text-[10px] text-gray-500 uppercase mb-1">Public Address</div>
-                            <div className="font-mono text-blue-300 text-xs truncate select-all" title={wallet.address}>
-                                {wallet.address}
+                        <Tooltip content="Your Public Address (r...). Think of it like your email address or mailbox. It's safe to share this with anyone to receive funds.">
+                            <div className="bg-gray-900/50 p-2 rounded border border-gray-700 cursor-help transition-colors hover:border-blue-500/50">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Public Address</div>
+                                <div className="font-mono text-blue-300 text-xs truncate select-all" title={wallet.address}>
+                                    {wallet.address}
+                                </div>
                             </div>
-                        </div>
+                        </Tooltip>
 
-                        <div className="bg-gray-900/50 p-2 rounded border border-gray-700 flex justify-between items-center">
-                            <div className="text-[10px] text-gray-500 uppercase">Balance</div>
-                            <div className="font-bold text-yellow-400 text-sm">
-                                {balance} <span className="text-[10px] text-gray-400 font-normal">YC</span>
+                        <Tooltip content="Your Balance in XRP. 1 XRP = 1,000,000 Drops. You need a small reserve (usually 10 XRP) to keep your account active on the ledger.">
+                            <div className="bg-gray-900/50 p-2 rounded border border-gray-700 flex justify-between items-center cursor-help transition-colors hover:border-yellow-500/50">
+                                <div className="text-[10px] text-gray-500 uppercase">Balance</div>
+                                <div className="font-bold text-yellow-400 text-sm">
+                                    {balance} <span className="text-[10px] text-gray-400 font-normal">YC</span>
+                                </div>
                             </div>
-                        </div>
+                        </Tooltip>
                     </div>
                 </div>
             )}
