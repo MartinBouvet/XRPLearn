@@ -134,6 +134,7 @@ Password: ``@/RLQ&cpCMkf+E``
 |--|--|--|
 | **Hackathon Ideas** | Project suggestions to get inspired for hackathons | [XRPL Hackathon Idea List](https://github.com/XRPL-Commons/community-ideas/blob/main/hackathon/index.md) |
 | **Quick Start Activities** | Guided coding activities for hands-on learning | [XRPL Commons Tutorials](https://docs.xrpl-commons.org) |
+| **Scaffold XRP** | Ready-to-use blank project with an integrated multi-wallet connector | [scaffold-xrp](./scaffold-xrp/README.md) |
 | **CLI Create XRP** | CLI tool to easily create dApps on the XRPL with an integrated wallet connector | [create-xrp](https://www.npmjs.com/package/create-xrp?activeTab=readme) |
 | **Transaction Quick Reference** | All XRPL transactions and payloads | [XRPL transaction types](https://xrpl.org/docs/references/protocol/transactions/types) |
 | **Faucets to get XRP and RLUSD** | Fund test wallets with XRP and RLUSD | [XRP Faucets](https://xrpl.org/resources/dev-tools/xrp-faucets) [RLUSD Faucets](https://tryrlusd.com/) |
