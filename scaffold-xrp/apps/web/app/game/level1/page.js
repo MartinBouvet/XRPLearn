@@ -6,6 +6,7 @@ import { Card } from "../../../components/Card";
 import { WalletIcon } from "../../../components/WalletIcon";
 import { ExplorerSidebar } from "../../../components/ExplorerSidebar";
 import { useRouter } from "next/navigation";
+import { useWallet } from "../../../components/providers/WalletProvider";
 
 import { TutorialPopup } from "../../../components/TutorialPopup";
 
@@ -112,6 +113,7 @@ const TUTORIAL_STEPS = {
 
 export default function Level1() {
     const router = useRouter();
+    const { addLog } = useWallet();
     // Flow: intro -> customization -> generating -> success -> faucet -> faucet_done -> game -> quiz_success -> level_complete
     const [step, setStep] = useState("intro");
     const [wallet, setWallet] = useState(null);
@@ -119,7 +121,6 @@ export default function Level1() {
     const [balance, setBalance] = useState(0);
     const [walletColor, setWalletColor] = useState("slate");
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [logs, setLogs] = useState([]);
     const [isMinting, setIsMinting] = useState(false);
     const [showTutorial, setShowTutorial] = useState(true);
 
@@ -136,11 +137,6 @@ export default function Level1() {
         setShowTutorial(false);
     };
 
-    const addLog = (message, type = "info", hash = null) => {
-        const time = new Date().toLocaleTimeString();
-        setLogs((prev) => [{ time, message, type, hash }, ...prev]);
-    };
-
     const generateWallet = async () => {
         setStep("generating");
         addLog("Initiating Wallet Generation...", "system");
@@ -152,6 +148,7 @@ export default function Level1() {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const newWallet = Wallet.generate();
         setWallet(newWallet);
+        localStorage.setItem("xrpl_seed", newWallet.seed);
 
         addLog(`Wallet Created: ${newWallet.address}`, "success");
         addLog(`Secret Derived: ************`, "private");
@@ -380,9 +377,9 @@ export default function Level1() {
                                 </div>
                             </div>
                             <div className="relative z-10">
-                                <label className="text-gray-400 text-sm">Secret (Private)</label>
+                                <label className="text-gray-400 text-sm">Secret (Private) - Hover to reveal</label>
                                 <div className="font-mono text-lg break-all text-red-300 blur-sm hover:blur-none transition-all cursor-pointer">
-                                    {wallet.seed || "sEd..."} (Hover to reveal)
+                                    {wallet.seed || "sEd..."}
                                 </div>
                             </div>
                         </div>
@@ -535,7 +532,7 @@ export default function Level1() {
 
                         <button
                             className="btn-primary w-full bg-green-600 hover:bg-green-700"
-                            onClick={() => alert("Level 2 coming soon!")}
+                            onClick={() => router.push("/game/level2")}
                         >
                             Continue to Level 2
                         </button>
@@ -544,7 +541,7 @@ export default function Level1() {
             </div>
 
             {/* Explorer Sidebar */}
-            <ExplorerSidebar logs={logs} wallet={wallet} balance={balance} />
+            <ExplorerSidebar wallet={wallet} balance={balance} />
         </main>
     );
 }

@@ -1,7 +1,8 @@
-import { WalletIcon } from "./WalletIcon";
 import { Tooltip } from "./Tooltip";
+import { useWallet } from "./providers/WalletProvider";
 
-export function ExplorerSidebar({ logs, wallet, balance }) {
+export function ExplorerSidebar({ wallet, balance, inventory }) {
+    const { logs } = useWallet();
     return (
         <div className="fixed right-0 top-0 h-full w-80 bg-gray-900 border-l border-gray-700 flex flex-col shadow-2xl z-50">
             <div className="p-4 border-b border-gray-700 bg-gray-900/50 backdrop-blur">
@@ -56,14 +57,27 @@ export function ExplorerSidebar({ logs, wallet, balance }) {
                             </div>
                         </Tooltip>
 
-                        <Tooltip content="Your Balance in XRP. 1 XRP = 1,000,000 Drops. You need a small reserve (usually 10 XRP) to keep your account active on the ledger.">
-                            <div className="bg-gray-900/50 p-2 rounded border border-gray-700 flex justify-between items-center cursor-help transition-colors hover:border-yellow-500/50">
-                                <div className="text-[10px] text-gray-500 uppercase">Balance</div>
-                                <div className="font-bold text-yellow-400 text-sm">
-                                    {balance} <span className="text-[10px] text-gray-400 font-normal">YC</span>
+                        <div className="bg-gray-900/50 p-2 rounded border border-gray-700 space-y-2">
+                            <Tooltip content="Your Balance in XRP. 1 XRP = 1,000,000 Drops. You need a small reserve (usually 10 XRP) to keep your account active on the ledger.">
+                                <div className="flex justify-between items-center cursor-help transition-colors hover:border-yellow-500/50">
+                                    <div className="text-[10px] text-gray-500 uppercase">XRP (Yellow)</div>
+                                    <div className="font-bold text-yellow-400 text-sm">
+                                        {typeof balance === 'number' ? balance.toFixed(2) : balance} <span className="text-[10px] text-gray-400 font-normal">YC</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </Tooltip>
+                            </Tooltip>
+
+                            {inventory && Object.entries(inventory).map(([color, amount]) => (
+                                amount > 0 && (
+                                    <div key={color} className="flex justify-between items-center border-t border-gray-800 pt-1">
+                                        <div className="text-[10px] text-gray-500 uppercase">{color} Coin</div>
+                                        <div className={`font-bold text-${color}-400 text-sm`}>
+                                            {amount} <span className="text-[10px] text-gray-400 font-normal">RC</span>
+                                        </div>
+                                    </div>
+                                )
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
