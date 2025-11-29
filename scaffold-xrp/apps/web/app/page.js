@@ -14,6 +14,15 @@ export default function Home() {
 
     setIsLoading(true);
 
+    // Simulation pour localhost (dev)
+    if (process.env.NODE_ENV === "development") {
+      localStorage.setItem("xrpl_username", username);
+      setTimeout(() => {
+        router.push("/lobby");
+      }, 500);
+      return;
+    }
+
     try {
       const res = await fetch("/api/lobby/join", {
         method: "POST",
@@ -70,8 +79,8 @@ export default function Home() {
               type="submit"
               disabled={isLoading}
               className={`group relative w-full flex justify-center py-4 px-4 border border-transparent text-lg font-medium rounded-md text-white ${isLoading
-                  ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                ? "bg-gray-600 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 } transition-all duration-200 transform hover:scale-105`}
             >
               {isLoading ? "Connexion..." : "Rejoindre l'aventure 🚀"}
