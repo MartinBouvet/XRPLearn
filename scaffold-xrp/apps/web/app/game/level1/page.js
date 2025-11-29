@@ -153,6 +153,22 @@ export default function Level1() {
         addLog(`Wallet Created: ${newWallet.address}`, "success");
         addLog(`Secret Derived: ************`, "private");
 
+        // Update server with real address
+        const username = localStorage.getItem("xrpl_username");
+        if (username) {
+            fetch("/api/community/members", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: username,
+                    address: newWallet.address,
+                    avatar: "👤",
+                    level: "1",
+                    status: "online"
+                })
+            }).catch(err => console.error("Failed to update wallet on server:", err));
+        }
+
         setStep("success");
     };
 
