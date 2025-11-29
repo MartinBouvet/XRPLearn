@@ -58,3 +58,4 @@ if (!client) {
 }
 
 export default client;
+export const isMock = client instanceof MockRedis;

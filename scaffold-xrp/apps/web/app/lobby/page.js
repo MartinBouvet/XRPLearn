@@ -8,6 +8,8 @@ export default function Lobby() {
     const [pseudo, setPseudo] = useState("");
     const [players, setPlayers] = useState([]);
 
+    const [isMock, setIsMock] = useState(false);
+
     useEffect(() => {
         const storedPseudo = localStorage.getItem("xrpl_username");
         if (!storedPseudo) {
@@ -22,9 +24,8 @@ export default function Lobby() {
                 const res = await fetch("/api/lobby/players");
                 if (res.ok) {
                     const data = await res.json();
-                    // Filter out current player to avoid duplication if needed, 
-                    // or just set all players. The UI separates "Me" so we might want to filter me out from the list.
-                    // But the UI shows "Me" separately. Let's filter out the current user from the list if present.
+                    if (data.isMock) setIsMock(true);
+
                     const otherPlayers = data.players.filter(p => p !== storedPseudo);
                     setPlayers(otherPlayers);
                 }
@@ -43,7 +44,12 @@ export default function Lobby() {
     }, [router]);
 
     return (
-        <main className="min-h-screen flex flex-col items-center p-8 bg-gray-900 text-white">
+        <main className="min-h-screen flex flex-col items-center p-8 bg-gray-900 text-white relative">
+            {isMock && (
+                <div className="absolute top-0 left-0 w-full bg-yellow-600/90 text-white text-center p-2 font-bold z-50 animate-pulse">
+                    ⚠️ DEMO MODE (NO DATABASE) - PLAYERS WILL NOT SYNC ⚠️
+                </div>
+            )}
             <h1 className="text-4xl font-bold mb-8 text-blue-400">Waiting Room</h1>
 
             <div className="text-2xl mb-12">
