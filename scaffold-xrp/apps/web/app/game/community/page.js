@@ -8,11 +8,10 @@ import { useWallet } from "../../../components/providers/WalletProvider";
 
 export default function Community() {
     const router = useRouter();
-    const { addLog } = useWallet();
+    const { addLog, members } = useWallet();
     const [wallet, setWallet] = useState(null);
     const [balance, setBalance] = useState(0);
     const [inventory, setInventory] = useState({ red: 0, green: 0, blue: 0 });
-    const [members, setMembers] = useState([]);
     const [selectedMember, setSelectedMember] = useState(null);
     const [amount, setAmount] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -26,25 +25,7 @@ export default function Community() {
         const _wallet = Wallet.fromSeed(seed);
         setWallet(_wallet);
         fetchBalance(_wallet);
-        fetchMembers();
     }, [router]);
-
-    // TODO: In the future, this should fetch from a real backend/database
-    // API Endpoint: GET /api/players
-    const fetchMembers = async () => {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        const fakeMembers = [
-            { name: "CryptoKing", address: Wallet.generate().address, avatar: "👑", level: "Guardian (Lvl 3)", status: "online" },
-            { name: "XRP_Fan", address: Wallet.generate().address, avatar: "🚀", level: "Trader (Lvl 2)", status: "away" },
-            { name: "LedgerMaster", address: Wallet.generate().address, avatar: "📒", level: "Novice (Lvl 1)", status: "online" },
-            { name: "ToTheMoon", address: Wallet.generate().address, avatar: "🌙", level: "Guardian (Lvl 3)", status: "online" },
-            { name: "SatoshiNakamoto", address: Wallet.generate().address, avatar: "🕵️", level: "Admin", status: "busy" },
-            { name: "Vitalik", address: Wallet.generate().address, avatar: "🦄", level: "Trader (Lvl 2)", status: "online" },
-        ];
-        setMembers(fakeMembers);
-    };
 
     const fetchBalance = async (_wallet) => {
         const client = new Client("wss://s.altnet.rippletest.net:51233");

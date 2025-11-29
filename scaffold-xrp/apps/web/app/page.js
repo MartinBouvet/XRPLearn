@@ -17,9 +17,16 @@ export default function Home() {
     // Simulation pour localhost (dev)
     if (process.env.NODE_ENV === "development") {
       localStorage.setItem("xrpl_username", username);
-      setTimeout(() => {
-        router.push("/lobby");
-      }, 500);
+
+      if (username.toLowerCase() === "admin") {
+        setTimeout(() => {
+          router.push("/admin");
+        }, 500);
+      } else {
+        setTimeout(() => {
+          router.push("/lobby");
+        }, 500);
+      }
       return;
     }
 
