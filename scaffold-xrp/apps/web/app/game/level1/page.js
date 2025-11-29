@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Wallet, Client, convertStringToHex } from "xrpl";
 import { Card } from "../../../components/Card";
 import { WalletIcon } from "../../../components/WalletIcon";
@@ -125,7 +125,7 @@ export default function Level1() {
     const [showTutorial, setShowTutorial] = useState(true);
     const [username, setUsername] = useState("");
 
-    const tutorialSteps = getTutorialSteps(username);
+    const tutorialSteps = useMemo(() => getTutorialSteps(username), [username]);
 
     useEffect(() => {
         const storedName = localStorage.getItem("xrpl_username");
