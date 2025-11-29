@@ -23,6 +23,41 @@ const TUTORIAL_STEPS = {
     }
 };
 
+const QUIZ_QUESTIONS = [
+    {
+        question: "Why did the validators vote on the block?",
+        options: [
+            { id: "fees", text: "To decide who gets the transaction fees" },
+            { id: "immutability", text: "To reach consensus on the correct history (Immutability)", correct: true },
+            { id: "encrypt", text: "To encrypt the data so no one can see it" }
+        ]
+    },
+    {
+        question: "Who owns and controls the XRP Ledger?",
+        options: [
+            { id: "ripple", text: "Ripple Labs" },
+            { id: "gov", text: "The Government" },
+            { id: "decentralized", text: "No one (It's decentralized)", correct: true }
+        ]
+    },
+    {
+        question: "What happens if you lose your Private Key (Seed)?",
+        options: [
+            { id: "reset", text: "I can reset it with my email" },
+            { id: "lost", text: "I lose access to my funds forever", correct: true },
+            { id: "bank", text: "The bank can restore it" }
+        ]
+    },
+    {
+        question: "How fast is an XRPL transaction usually confirmed?",
+        options: [
+            { id: "fast", text: "3-5 Seconds", correct: true },
+            { id: "medium", text: "10 Minutes" },
+            { id: "slow", text: "1-2 Days" }
+        ]
+    }
+];
+
 export default function Level3() {
     const router = useRouter();
     const { addLog } = useWallet();
@@ -31,6 +66,7 @@ export default function Level3() {
     const [balance, setBalance] = useState(0);
     const [inventory, setInventory] = useState({ red: 0, green: 0, blue: 0 });
     const [showTutorial, setShowTutorial] = useState(true);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     const handleTutorialNext = () => {
         setShowTutorial(false);
@@ -90,11 +126,20 @@ export default function Level3() {
         setStep("quiz");
     };
 
-    const handleQuizAnswer = (answer) => {
-        if (answer === "immutability") {
-            addLog("Correct! The blockchain is immutable.", "success");
-            setStep("minting");
-            handleMintBadge();
+    const handleQuizAnswer = (isCorrect) => {
+        if (isCorrect) {
+            addLog("Correct Answer!", "success");
+
+            if (currentQuestionIndex < QUIZ_QUESTIONS.length - 1) {
+                // Next question
+                setTimeout(() => setCurrentQuestionIndex(prev => prev + 1), 1000);
+            } else {
+                // Quiz complete
+                setTimeout(() => {
+                    setStep("minting");
+                    handleMintBadge();
+                }, 1000);
+            }
         } else {
             addLog("Incorrect. Try again.", "error");
         }
@@ -134,7 +179,7 @@ export default function Level3() {
     };
 
     return (
-        <main className="min-h-screen flex bg-gray-900 text-white">
+        <main className="min-h-screen flex bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
             <TutorialPopup
                 isOpen={showTutorial && !!TUTORIAL_STEPS[step]}
                 title={TUTORIAL_STEPS[step]?.title}
@@ -143,7 +188,7 @@ export default function Level3() {
             />
             <div className="flex-1 p-8 flex flex-col items-center justify-center overflow-hidden mr-80">
                 {/* Progress Bar */}
-                <div className="w-full max-w-4xl mb-8 bg-gray-700 rounded-full h-4 z-10">
+                <div className="w-full max-w-4xl mb-8 bg-gray-200 dark:bg-gray-700 rounded-full h-4 z-10">
                     <div
                         className="bg-green-500 h-4 rounded-full transition-all duration-500"
                         style={{
@@ -179,7 +224,7 @@ export default function Level3() {
 
                         <div className="flex items-center justify-center gap-8 mb-12 relative h-80 w-full">
                             {/* Previous Block */}
-                            <div className={`w-32 h-32 bg-gray-800 border-4 border-gray-600 rounded flex items-center justify-center transition-all duration-1000 ${chainLinked ? "opacity-100 translate-x-0" : "opacity-50 -translate-x-12"}`}>
+                            <div className={`w-32 h-32 bg-white dark:bg-gray-800 border-4 border-gray-300 dark:border-gray-600 rounded flex items-center justify-center transition-all duration-1000 ${chainLinked ? "opacity-100 translate-x-0" : "opacity-50 -translate-x-12"}`}>
                                 <Tooltip content="A 'Ledger' (Block) contains a set of transactions. They are linked cryptographically.">
                                     <div className="text-4xl">📦</div>
                                 </Tooltip>
@@ -187,12 +232,12 @@ export default function Level3() {
                             </div>
 
                             {/* Chain Link */}
-                            <div className={`text-4xl text-gray-500 transition-all duration-1000 ${chainLinked ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}>
+                            <div className={`text-4xl text-gray-400 dark:text-gray-500 transition-all duration-1000 ${chainLinked ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}>
                                 🔗
                             </div>
 
                             {/* Current Block */}
-                            <div className={`relative w-64 h-64 bg-gray-800 border-4 ${blockSealed ? "border-green-500" : "border-yellow-500"} rounded-xl flex flex-col items-center justify-center transition-all duration-500`}>
+                            <div className={`relative w-64 h-64 bg-white dark:bg-gray-800 border-4 ${blockSealed ? "border-green-500" : "border-yellow-500"} rounded-xl flex flex-col items-center justify-center transition-all duration-500 shadow-xl dark:shadow-none`}>
 
                                 {/* Transactions entering the block */}
                                 <div className={`absolute inset-0 flex flex-col items-center justify-center gap-2 transition-all duration-500 ${blockSealed ? "opacity-0 scale-50" : "opacity-100"}`}>
@@ -240,7 +285,7 @@ export default function Level3() {
                                     </>
                                 )}
 
-                                <div className="absolute -bottom-8 text-sm text-gray-400 w-full text-center">
+                                <div className="absolute -bottom-8 text-sm text-gray-500 dark:text-gray-400 w-full text-center">
                                     {blockSealed ? "Sealed & Verified" : validatorsVoting ? "Validators Voting..." : transactionsInBlock ? "Collecting Transactions..." : "Waiting for Tx..."}
                                 </div>
                             </div>
@@ -263,29 +308,20 @@ export default function Level3() {
 
                 {step === "quiz" && (
                     <div className="text-center max-w-2xl animate-fade-in z-10">
-                        <h2 className="text-3xl font-bold mb-8">Security Check</h2>
+                        <h2 className="text-3xl font-bold mb-8">Security Check ({currentQuestionIndex + 1}/{QUIZ_QUESTIONS.length})</h2>
                         <p className="text-xl mb-8">
-                            Why did the validators vote on the block?
+                            {QUIZ_QUESTIONS[currentQuestionIndex].question}
                         </p>
                         <div className="grid grid-cols-1 gap-4">
-                            <button
-                                onClick={() => handleQuizAnswer("warm")}
-                                className="p-4 bg-gray-800 hover:bg-gray-700 rounded-xl border border-gray-600 text-left transition-all"
-                            >
-                                A. To decide who gets the transaction fees
-                            </button>
-                            <button
-                                onClick={() => handleQuizAnswer("immutability")}
-                                className="p-4 bg-gray-800 hover:bg-gray-700 rounded-xl border border-gray-600 text-left transition-all"
-                            >
-                                B. To reach consensus on the correct history (Immutability)
-                            </button>
-                            <button
-                                onClick={() => handleQuizAnswer("hide")}
-                                className="p-4 bg-gray-800 hover:bg-gray-700 rounded-xl border border-gray-600 text-left transition-all"
-                            >
-                                C. To encrypt the data so no one can see it
-                            </button>
+                            {QUIZ_QUESTIONS[currentQuestionIndex].options.map((option) => (
+                                <button
+                                    key={option.id}
+                                    onClick={() => handleQuizAnswer(option.correct)}
+                                    className="p-4 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl border border-gray-300 dark:border-gray-600 text-left transition-all hover:border-green-500 shadow-sm dark:shadow-none"
+                                >
+                                    {option.text}
+                                </button>
+                            ))}
                         </div>
                     </div>
                 )}
@@ -317,10 +353,10 @@ export default function Level3() {
                             </div>
                         </div>
 
-                        <p className="text-gray-300 mb-8 text-lg">
+                        <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg">
                             You have mastered the basics of XRPL:
                             <br />
-                            <span className="text-blue-400">Wallets</span> • <span className="text-yellow-400">Transactions</span> • <span className="text-green-400">Blockchain</span>
+                            <span className="text-blue-600 dark:text-blue-400">Wallets</span> • <span className="text-yellow-600 dark:text-yellow-400">Transactions</span> • <span className="text-green-600 dark:text-green-400">Blockchain</span>
                         </p>
 
                         <button

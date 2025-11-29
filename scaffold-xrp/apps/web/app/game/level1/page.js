@@ -270,7 +270,7 @@ export default function Level1() {
     ];
 
     return (
-        <main className="min-h-screen flex bg-gray-900 text-white">
+        <main className="min-h-screen flex bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
             <TutorialPopup
                 isOpen={showTutorial && !!TUTORIAL_STEPS[step]}
                 title={TUTORIAL_STEPS[step]?.title}
@@ -279,7 +279,7 @@ export default function Level1() {
             />
             <div className="flex-1 p-8 flex flex-col items-center justify-center overflow-hidden mr-80">
                 {/* Progress Bar */}
-                <div className="w-full max-w-4xl mb-8 bg-gray-700 rounded-full h-4 z-10">
+                <div className="w-full max-w-4xl mb-8 bg-gray-200 dark:bg-gray-700 rounded-full h-4 z-10">
                     <div
                         className="bg-blue-500 h-4 rounded-full transition-all duration-500"
                         style={{
@@ -315,7 +315,7 @@ export default function Level1() {
                 {step === "customization" && (
                     <div className="text-center w-full max-w-2xl animate-fade-in z-10">
                         <h2 className="text-3xl font-bold mb-8">Customize your Safe</h2>
-                        <p className="text-gray-300 mb-8">
+                        <p className="text-gray-600 dark:text-gray-300 mb-8">
                             Choose the color of your future wallet. This is where your funds will be secured.
                         </p>
 
@@ -366,7 +366,7 @@ export default function Level1() {
                             Wallet Generated! 🎉
                         </h2>
 
-                        <div className="bg-gray-800 p-6 rounded-xl mb-8 text-left border border-green-500 relative overflow-hidden">
+                        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl mb-8 text-left border border-green-500 relative overflow-hidden shadow-lg dark:shadow-none">
                             <div className="absolute top-0 right-0 p-2 opacity-10">
                                 <WalletIcon color={walletColor} size="lg" />
                             </div>
@@ -526,7 +526,7 @@ export default function Level1() {
                             </div>
                         </div>
 
-                        <p className="text-gray-300 mb-8">
+                        <p className="text-gray-600 dark:text-gray-300 mb-8">
                             You have successfully created a wallet, funded it, and learned the basics of keys.
                         </p>
 

@@ -12,16 +12,16 @@ export function TutorialPopup({ title, content, onNext, onClose, isOpen }) {
         <div className={containerClasses}>
             <div className={`
                 relative max-w-xl w-full 
-                bg-gray-900/80 backdrop-blur-xl 
-                border border-blue-500/30 
+                bg-white/90 dark:bg-gray-900/80 backdrop-blur-xl 
+                border border-blue-200 dark:border-blue-500/30 
                 rounded-2xl p-1 
-                shadow-[0_0_50px_rgba(37,99,235,0.2)]
+                shadow-2xl dark:shadow-[0_0_50px_rgba(37,99,235,0.2)]
             `}>
                 {/* Glowing Border Container */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 animate-pulse-glow -z-10"></div>
 
                 {/* Inner Content */}
-                <div className="bg-gray-900/90 rounded-xl p-6 overflow-hidden relative">
+                <div className="bg-gray-50/90 dark:bg-gray-900/90 rounded-xl p-6 overflow-hidden relative">
                     {/* Tech Accents */}
                     <div className="absolute top-0 left-0 w-20 h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
                     <div className="absolute bottom-0 right-0 w-20 h-1 bg-gradient-to-l from-purple-500 to-transparent"></div>
@@ -33,7 +33,7 @@ export function TutorialPopup({ title, content, onNext, onClose, isOpen }) {
                             <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center border border-blue-500/50">
                                 <span className="text-blue-400 text-lg">ℹ️</span>
                             </div>
-                            <h3 className="text-xl font-bold text-white tracking-wide">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white tracking-wide">
                                 {title}
                             </h3>
                         </div>
@@ -47,7 +47,7 @@ export function TutorialPopup({ title, content, onNext, onClose, isOpen }) {
                         )}
                     </div>
 
-                    <div className="prose prose-invert max-w-none mb-6 text-gray-300 text-base leading-relaxed pl-11">
+                    <div className="prose prose-invert max-w-none mb-6 text-gray-600 dark:text-gray-300 text-base leading-relaxed pl-11">
                         {content}
                     </div>
 

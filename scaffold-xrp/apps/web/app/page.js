@@ -55,7 +55,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 text-white relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 text-gray-900 dark:text-white relative overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <BlockchainBackground />
 
       <div className="max-w-md w-full relative z-20">
@@ -68,7 +68,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="bg-gray-900/40 backdrop-blur-xl border border-blue-500/30 p-8 rounded-3xl shadow-[0_0_50px_rgba(0,170,228,0.2)] relative group">
+        <div className="bg-white/80 dark:bg-gray-900/40 backdrop-blur-xl border border-blue-200 dark:border-blue-500/30 p-8 rounded-3xl shadow-2xl dark:shadow-[0_0_50px_rgba(0,170,228,0.2)] relative group transition-colors duration-300">
           {/* Corner Accents */}
           <div className="absolute -top-1 -left-1 w-8 h-8 border-t-2 border-l-2 border-blue-500 rounded-tl-xl"></div>
           <div className="absolute -top-1 -right-1 w-8 h-8 border-t-2 border-r-2 border-blue-500 rounded-tr-xl"></div>
@@ -77,7 +77,7 @@ export default function Home() {
 
           <form onSubmit={handleJoin} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="username" className="block text-sm font-mono text-blue-300 uppercase tracking-wider">
+              <label htmlFor="username" className="block text-sm font-mono text-blue-600 dark:text-blue-300 uppercase tracking-wider">
                 Identity Protocol
               </label>
               <div className="relative">
@@ -86,7 +86,7 @@ export default function Home() {
                   name="username"
                   type="text"
                   required
-                  className="w-full bg-gray-800/50 border border-blue-500/30 rounded-xl px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all font-mono text-lg text-center tracking-widest"
+                  className="w-full bg-gray-100 dark:bg-gray-800/50 border border-blue-200 dark:border-blue-500/30 rounded-xl px-4 py-4 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all font-mono text-lg text-center tracking-widest"
                   placeholder="ENTER_CODENAME"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -100,8 +100,8 @@ export default function Home() {
               type="submit"
               disabled={isLoading}
               className={`w-full relative overflow-hidden group py-4 px-6 rounded-xl font-bold text-lg tracking-wider uppercase transition-all duration-300 ${isLoading
-                  ? "bg-gray-700 cursor-not-allowed text-gray-400"
-                  : "bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.7)]"
+                ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed text-gray-500 dark:text-gray-400"
+                : "bg-blue-600 hover:bg-blue-500 text-white shadow-lg dark:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.7)]"
                 }`}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">

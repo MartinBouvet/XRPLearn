@@ -268,7 +268,7 @@ export default function Level2() {
     };
 
     return (
-        <main className="min-h-screen flex bg-gray-900 text-white">
+        <main className="min-h-screen flex bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
             <TutorialPopup
                 isOpen={showTutorial && !!TUTORIAL_STEPS[step]}
                 title={TUTORIAL_STEPS[step]?.title}
@@ -277,7 +277,7 @@ export default function Level2() {
             />
             <div className="flex-1 p-8 flex flex-col items-center justify-center overflow-hidden mr-80">
                 {/* Progress Bar */}
-                <div className="w-full max-w-4xl mb-8 bg-gray-700 rounded-full h-4 z-10">
+                <div className="w-full max-w-4xl mb-8 bg-gray-200 dark:bg-gray-700 rounded-full h-4 z-10">
                     <div
                         className="bg-purple-500 h-4 rounded-full transition-all duration-500"
                         style={{
@@ -313,17 +313,17 @@ export default function Level2() {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 w-full">
                             {vendors.map((vendor) => (
-                                <div key={vendor.id} className={`bg-gray-800 border-2 border-${vendor.color}-500 rounded-xl p-6 flex flex-col items-center shadow-lg transform hover:scale-105 transition-all`}>
+                                <div key={vendor.id} className={`bg-white dark:bg-gray-800 border-2 border-${vendor.color}-500 rounded-xl p-6 flex flex-col items-center shadow-lg transform hover:scale-105 transition-all`}>
                                     <div className={`w-16 h-16 rounded-full bg-${vendor.color}-600 mb-4 flex items-center justify-center text-2xl border-2 border-white`}>
                                         {vendor.color === "red" ? "👺" : vendor.color === "green" ? "🐸" : "🧞"}
                                     </div>
-                                    <h3 className={`text-xl font-bold text-${vendor.color}-400 mb-2`}>{vendor.name}</h3>
-                                    <p className="text-gray-300 mb-4 text-center">
+                                    <h3 className={`text-xl font-bold text-${vendor.color}-600 dark:text-${vendor.color}-400 mb-2`}>{vendor.name}</h3>
+                                    <p className="text-gray-600 dark:text-gray-300 mb-4 text-center">
                                         Sells: <strong>{vendor.sells} {vendor.color.toUpperCase()} Coins</strong>
                                         <br />
                                         Price: <strong>{vendor.price} YC</strong>
                                     </p>
-                                    <div className="bg-black/50 p-2 rounded w-full mb-4 font-mono text-xs break-all text-gray-400 text-center select-all">
+                                    <div className="bg-gray-100 dark:bg-black/50 p-2 rounded w-full mb-4 font-mono text-xs break-all text-gray-500 dark:text-gray-400 text-center select-all">
                                         <Tooltip content="This is a Public Address. It's safe to share, like an IBAN or Email.">
                                             {vendor.address}
                                         </Tooltip>
@@ -333,7 +333,7 @@ export default function Level2() {
                                             navigator.clipboard.writeText(vendor.address);
                                             addLog(`Copied ${vendor.name} address`, "info");
                                         }}
-                                        className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-white"
+                                        className="text-xs bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-2 py-1 rounded text-gray-700 dark:text-white"
                                     >
                                         Copy Address
                                     </button>
@@ -342,27 +342,27 @@ export default function Level2() {
                         </div>
 
                         {/* Transaction Form */}
-                        <div className="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-md">
+                        <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-md">
                             <h3 className="text-xl font-bold mb-6 text-center">Make a Transaction</h3>
                             <form onSubmit={handleSendTransaction} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Destination Address</label>
+                                    <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Destination Address</label>
                                     <input
                                         type="text"
                                         value={inputAddress}
                                         onChange={(e) => setInputAddress(e.target.value)}
                                         placeholder="r..."
-                                        className="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white font-mono text-sm focus:ring-2 focus:ring-purple-500 outline-none"
+                                        className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-purple-500 outline-none"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Amount (Yellow Coins)</label>
+                                    <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Amount (Yellow Coins)</label>
                                     <input
                                         type="number"
                                         value={inputAmount}
                                         onChange={(e) => setInputAmount(e.target.value)}
                                         placeholder="0"
-                                        className="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white font-mono text-sm focus:ring-2 focus:ring-purple-500 outline-none"
+                                        className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-purple-500 outline-none"
                                     />
                                 </div>
                                 <button
@@ -414,7 +414,7 @@ export default function Level2() {
 
                         <button
                             onClick={() => setStep("market")}
-                            className="btn-secondary bg-gray-600 hover:bg-gray-500"
+                            className="btn-primary bg-gray-600 hover:bg-gray-500 shadow-[0_0_20px_rgba(75,85,99,0.5)] hover:shadow-[0_0_30px_rgba(75,85,99,0.7)]"
                         >
                             &lt; Back to Market
                         </button>
@@ -448,7 +448,7 @@ export default function Level2() {
                             </div>
                         </div>
 
-                        <p className="text-gray-300 mb-8">
+                        <p className="text-gray-600 dark:text-gray-300 mb-8">
                             You've learned how to exchange assets and make payments on the network.
                         </p>
 
