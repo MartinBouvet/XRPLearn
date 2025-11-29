@@ -33,7 +33,7 @@ const QUESTIONS = [
     },
 ];
 
-const TUTORIAL_STEPS = {
+const getTutorialSteps = (username) => ({
     intro: {
         title: "Welcome to the Blockchain",
         content: (
@@ -109,7 +109,7 @@ const TUTORIAL_STEPS = {
             </>
         )
     }
-};
+});
 
 export default function Level1() {
     const router = useRouter();
@@ -125,6 +125,8 @@ export default function Level1() {
     const [showTutorial, setShowTutorial] = useState(true);
     const [username, setUsername] = useState("");
 
+    const tutorialSteps = getTutorialSteps(username);
+
     useEffect(() => {
         const storedName = localStorage.getItem("xrpl_username");
         if (storedName) setUsername(storedName);
@@ -132,12 +134,12 @@ export default function Level1() {
 
     // Reset tutorial when step changes, if there is a tutorial for that step
     useEffect(() => {
-        if (TUTORIAL_STEPS[step]) {
+        if (tutorialSteps[step]) {
             setShowTutorial(true);
         } else {
             setShowTutorial(false);
         }
-    }, [step]);
+    }, [step, tutorialSteps]);
 
     const handleTutorialNext = () => {
         setShowTutorial(false);
@@ -294,9 +296,9 @@ export default function Level1() {
     return (
         <main className="min-h-screen flex bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
             <TutorialPopup
-                isOpen={showTutorial && !!TUTORIAL_STEPS[step]}
-                title={TUTORIAL_STEPS[step]?.title}
-                content={TUTORIAL_STEPS[step]?.content}
+                isOpen={showTutorial && !!tutorialSteps[step]}
+                title={tutorialSteps[step]?.title}
+                content={tutorialSteps[step]?.content}
                 onNext={handleTutorialNext}
             />
             <div className="flex-1 p-8 flex flex-col items-center justify-center overflow-hidden mr-80">
