@@ -36,9 +36,17 @@ export default function Lobby() {
                         </h1>
                         <p className="text-gray-400 mt-2">En attente des autres joueurs...</p>
                     </div>
-                    <div className="bg-gray-800 px-6 py-3 rounded-full border border-gray-700">
-                        <span className="text-gray-400 mr-2">Joueurs connectés:</span>
-                        <span className="text-2xl font-bold text-blue-400">{players.length}</span>
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => router.push('/game')}
+                            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full transition-transform hover:scale-105 shadow-lg animate-pulse"
+                        >
+                            Lancer la Partie ▶️
+                        </button>
+                        <div className="bg-gray-800 px-6 py-3 rounded-full border border-gray-700">
+                            <span className="text-gray-400 mr-2">Joueurs connectés:</span>
+                            <span className="text-2xl font-bold text-blue-400">{players.length}</span>
+                        </div>
                     </div>
                 </header>
 
@@ -47,8 +55,8 @@ export default function Lobby() {
                         <div
                             key={`${player}-${index}`}
                             className={`transform transition-all duration-500 hover:scale-105 ${player === myUsername
-                                    ? "bg-gradient-to-br from-blue-600 to-blue-800 border-blue-400 shadow-blue-500/50"
-                                    : "bg-gray-800 border-gray-700 hover:border-gray-500"
+                                ? "bg-gradient-to-br from-blue-600 to-blue-800 border-blue-400 shadow-blue-500/50"
+                                : "bg-gray-800 border-gray-700 hover:border-gray-500"
                                 } p-6 rounded-xl border shadow-lg flex flex-col items-center justify-center aspect-video relative overflow-hidden group animate-fade-in-up`}
                             style={{ animationDelay: `${index * 100}ms` }}
                         >
