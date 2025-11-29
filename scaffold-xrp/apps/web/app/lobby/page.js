@@ -16,15 +16,30 @@ export default function Lobby() {
         }
         setPseudo(storedPseudo);
 
-        // Simulate other players joining
-        const fakePlayers = ["CryptoKing", "XRP_Fan", "LedgerMaster", "ToTheMoon"];
-        let delay = 0;
-        fakePlayers.forEach((player) => {
-            delay += Math.random() * 1000 + 500;
-            setTimeout(() => {
-                setPlayers((prev) => [...prev, player]);
-            }, delay);
-        });
+        // Fetch real players from API
+        const fetchPlayers = async () => {
+            try {
+                const res = await fetch("/api/lobby/players");
+                if (res.ok) {
+                    const data = await res.json();
+                    // Filter out current player to avoid duplication if needed, 
+                    // or just set all players. The UI separates "Me" so we might want to filter me out from the list.
+                    // But the UI shows "Me" separately. Let's filter out the current user from the list if present.
+                    const otherPlayers = data.players.filter(p => p !== storedPseudo);
+                    setPlayers(otherPlayers);
+                }
+            } catch (error) {
+                console.error("Failed to fetch players:", error);
+            }
+        };
+
+        // Initial fetch
+        fetchPlayers();
+
+        // Poll every 3 seconds
+        const interval = setInterval(fetchPlayers, 3000);
+
+        return () => clearInterval(interval);
     }, [router]);
 
     return (
