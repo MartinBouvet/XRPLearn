@@ -1,14 +1,19 @@
-import { kv } from '@vercel/kv';
+import client from '../../../../lib/redis';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic'; // Disable caching to get real-time results
 
 export async function GET() {
     try {
-        // Get all members of the 'players' set
-        const players = await kv.smembers('players');
+        // Ensure client is connected
+        if (!client.isOpen) {
+            await client.connect();
+        }
 
-        // Handle case where set is empty (returns null or empty array depending on client)
+        // Get all members of the 'players' set
+        const players = await client.sMembers('players');
+
+        // Handle case where set is empty
         const playerList = Array.isArray(players) ? players : [];
 
         return NextResponse.json({ players: playerList });
