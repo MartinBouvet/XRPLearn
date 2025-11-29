@@ -5,6 +5,23 @@ import { Wallet, Client, convertStringToHex } from "xrpl";
 import { ExplorerSidebar } from "../../../components/ExplorerSidebar";
 import { useRouter } from "next/navigation";
 import { useWallet } from "../../../components/providers/WalletProvider";
+import { TutorialPopup } from "../../../components/TutorialPopup";
+import { Tooltip } from "../../../components/Tooltip";
+
+const TUTORIAL_STEPS = {
+    intro: {
+        title: "The Engine Room",
+        content: "Transactions aren't just sent; they must be VALIDATED. You are now entering the consensus chamber where the magic happens."
+    },
+    validating: {
+        title: "Consensus",
+        content: "Validators are independent servers that agree on which transactions are valid. They vote, and once they agree (Consensus), the block is sealed."
+    },
+    quiz: {
+        title: "Immutability",
+        content: "Once a block is sealed (Ledger Closed), it can NEVER be changed. This is Immutability, and it's why blockchains are so secure."
+    }
+};
 
 export default function Level3() {
     const router = useRouter();
@@ -13,6 +30,15 @@ export default function Level3() {
     const [wallet, setWallet] = useState(null);
     const [balance, setBalance] = useState(0);
     const [inventory, setInventory] = useState({ red: 0, green: 0, blue: 0 });
+    const [showTutorial, setShowTutorial] = useState(true);
+
+    const handleTutorialNext = () => {
+        setShowTutorial(false);
+    };
+
+    useEffect(() => {
+        setShowTutorial(true);
+    }, [step]);
 
     // Animation states
     const [transactionsInBlock, setTransactionsInBlock] = useState(false);
@@ -109,6 +135,12 @@ export default function Level3() {
 
     return (
         <main className="min-h-screen flex bg-gray-900 text-white">
+            <TutorialPopup
+                isOpen={showTutorial && !!TUTORIAL_STEPS[step]}
+                title={TUTORIAL_STEPS[step]?.title}
+                content={TUTORIAL_STEPS[step]?.content}
+                onNext={handleTutorialNext}
+            />
             <div className="flex-1 p-8 flex flex-col items-center justify-center overflow-hidden mr-80">
                 {/* Progress Bar */}
                 <div className="w-full max-w-4xl mb-8 bg-gray-700 rounded-full h-4 z-10">
@@ -148,7 +180,9 @@ export default function Level3() {
                         <div className="flex items-center justify-center gap-8 mb-12 relative h-80 w-full">
                             {/* Previous Block */}
                             <div className={`w-32 h-32 bg-gray-800 border-4 border-gray-600 rounded flex items-center justify-center transition-all duration-1000 ${chainLinked ? "opacity-100 translate-x-0" : "opacity-50 -translate-x-12"}`}>
-                                <div className="text-4xl">📦</div>
+                                <Tooltip content="A 'Ledger' (Block) contains a set of transactions. They are linked cryptographically.">
+                                    <div className="text-4xl">📦</div>
+                                </Tooltip>
                                 <div className="absolute -bottom-6 text-xs text-gray-500">Block #482909</div>
                             </div>
 
@@ -185,9 +219,24 @@ export default function Level3() {
                                 {/* Validators */}
                                 {validatorsVoting && !blockSealed && (
                                     <>
-                                        <div className="absolute -top-10 left-10 text-3xl animate-bounce" style={{ animationDelay: "0s" }}>🤖 <span className="text-xs bg-green-500 text-black px-1 rounded">VOTE</span></div>
-                                        <div className="absolute -top-10 right-10 text-3xl animate-bounce" style={{ animationDelay: "0.3s" }}>🤖 <span className="text-xs bg-green-500 text-black px-1 rounded">VOTE</span></div>
-                                        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-3xl animate-bounce" style={{ animationDelay: "0.6s" }}>🤖 <span className="text-xs bg-green-500 text-black px-1 rounded">VOTE</span></div>
+                                        <div className="absolute -top-10 left-10 text-3xl animate-bounce" style={{ animationDelay: "0s" }}>
+                                            <Tooltip content="Validators are nodes that vote on the correct order of transactions.">
+                                                🤖
+                                            </Tooltip>
+                                            <span className="text-xs bg-green-500 text-black px-1 rounded">VOTE</span>
+                                        </div>
+                                        <div className="absolute -top-10 right-10 text-3xl animate-bounce" style={{ animationDelay: "0.3s" }}>
+                                            <Tooltip content="Validators are nodes that vote on the correct order of transactions.">
+                                                🤖
+                                            </Tooltip>
+                                            <span className="text-xs bg-green-500 text-black px-1 rounded">VOTE</span>
+                                        </div>
+                                        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-3xl animate-bounce" style={{ animationDelay: "0.6s" }}>
+                                            <Tooltip content="Validators are nodes that vote on the correct order of transactions.">
+                                                🤖
+                                            </Tooltip>
+                                            <span className="text-xs bg-green-500 text-black px-1 rounded">VOTE</span>
+                                        </div>
                                     </>
                                 )}
 

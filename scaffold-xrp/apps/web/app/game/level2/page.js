@@ -6,6 +6,23 @@ import { WalletIcon } from "../../../components/WalletIcon";
 import { ExplorerSidebar } from "../../../components/ExplorerSidebar";
 import { useRouter } from "next/navigation";
 import { useWallet } from "../../../components/providers/WalletProvider";
+import { TutorialPopup } from "../../../components/TutorialPopup";
+import { Tooltip } from "../../../components/Tooltip";
+
+const TUTORIAL_STEPS = {
+    intro: {
+        title: "Welcome to the Market",
+        content: "Here you'll learn how to send value across the world in seconds. You have XRP (Yellow Coins), but you need Red Coins to proceed."
+    },
+    market: {
+        title: "The Power of Addresses",
+        content: "Addresses (starting with 'r...') are like email addresses for money. Always double-check them! Transactions on XRPL are final and cannot be reversed."
+    },
+    door: {
+        title: "Smart Conditions",
+        content: "This door is locked by a smart condition. It will only open if it receives exactly 100 Red Coins. This demonstrates how payments can trigger real-world actions."
+    }
+};
 
 const DOOR_ADDRESS = "raDzvtC56NT4Ae5jEjpnbAeDMbHK9fSgdC"; // Valid Testnet Address
 
@@ -17,6 +34,15 @@ export default function Level2() {
     const [balance, setBalance] = useState(0); // XRP (Yellow Coins)
     const [inventory, setInventory] = useState({ red: 0, green: 0, blue: 0 });
     const [isLoading, setIsLoading] = useState(false);
+    const [showTutorial, setShowTutorial] = useState(true);
+
+    const handleTutorialNext = () => {
+        setShowTutorial(false);
+    };
+
+    useEffect(() => {
+        setShowTutorial(true);
+    }, [step]);
 
     // Transaction Form State
     const [inputAddress, setInputAddress] = useState("");
@@ -243,6 +269,12 @@ export default function Level2() {
 
     return (
         <main className="min-h-screen flex bg-gray-900 text-white">
+            <TutorialPopup
+                isOpen={showTutorial && !!TUTORIAL_STEPS[step]}
+                title={TUTORIAL_STEPS[step]?.title}
+                content={TUTORIAL_STEPS[step]?.content}
+                onNext={handleTutorialNext}
+            />
             <div className="flex-1 p-8 flex flex-col items-center justify-center overflow-hidden mr-80">
                 {/* Progress Bar */}
                 <div className="w-full max-w-4xl mb-8 bg-gray-700 rounded-full h-4 z-10">
@@ -292,7 +324,9 @@ export default function Level2() {
                                         Price: <strong>{vendor.price} YC</strong>
                                     </p>
                                     <div className="bg-black/50 p-2 rounded w-full mb-4 font-mono text-xs break-all text-gray-400 text-center select-all">
-                                        {vendor.address}
+                                        <Tooltip content="This is a Public Address. It's safe to share, like an IBAN or Email.">
+                                            {vendor.address}
+                                        </Tooltip>
                                     </div>
                                     <button
                                         onClick={() => {
@@ -336,7 +370,9 @@ export default function Level2() {
                                     disabled={isLoading}
                                     className={`w-full py-3 rounded-lg font-bold text-lg ${isLoading ? "bg-gray-600 cursor-not-allowed" : "bg-yellow-600 hover:bg-yellow-700"} transition-colors`}
                                 >
-                                    {isLoading ? "Processing..." : "Sign & Send Transaction ✍️"}
+                                    <Tooltip content="Signing a transaction proves it came from YOU. It requires your private key (handled by the wallet).">
+                                        {isLoading ? "Processing..." : "Sign & Send Transaction ✍️"}
+                                    </Tooltip>
                                 </button>
                             </form>
                         </div>
