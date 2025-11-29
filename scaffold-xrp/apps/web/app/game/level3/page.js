@@ -276,9 +276,9 @@ export default function Level3() {
 
                         <button
                             className="btn-primary w-full bg-blue-600 hover:bg-blue-700"
-                            onClick={() => router.push("/lobby")}
+                            onClick={() => router.push("/game/community")}
                         >
-                            Return to Lobby
+                            Join the Community
                         </button>
                     </div>
                 )}

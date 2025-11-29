@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { Wallet } from "xrpl";
 
 const WalletContext = createContext(undefined);
 
@@ -10,6 +11,26 @@ export function WalletProvider({ children }) {
   const [accountInfo, setAccountInfo] = useState(null);
   const [logs, setLogs] = useState([]);
   const [statusMessage, setStatusMessage] = useState(null);
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    // Initialize Simulation Members
+    const storedMembers = localStorage.getItem("simulation_members");
+    if (storedMembers) {
+      setMembers(JSON.parse(storedMembers));
+    } else {
+      const fakeMembers = [
+        { name: "CryptoKing", address: Wallet.generate().address, avatar: "👑", level: "Guardian (Lvl 3)", status: "online" },
+        { name: "XRP_Fan", address: Wallet.generate().address, avatar: "🚀", level: "Trader (Lvl 2)", status: "away" },
+        { name: "LedgerMaster", address: Wallet.generate().address, avatar: "📒", level: "Novice (Lvl 1)", status: "online" },
+        { name: "ToTheMoon", address: Wallet.generate().address, avatar: "🌙", level: "Guardian (Lvl 3)", status: "online" },
+        { name: "SatoshiNakamoto", address: Wallet.generate().address, avatar: "🕵️", level: "Admin", status: "busy" },
+        { name: "Vitalik", address: Wallet.generate().address, avatar: "🦄", level: "Trader (Lvl 2)", status: "online" },
+      ];
+      localStorage.setItem("simulation_members", JSON.stringify(fakeMembers));
+      setMembers(fakeMembers);
+    }
+  }, []);
 
   const setWalletManager = useCallback((manager) => {
     setWalletManagerState(manager);
@@ -39,6 +60,7 @@ export function WalletProvider({ children }) {
         accountInfo,
         logs,
         statusMessage,
+        members,
         setWalletManager,
         setIsConnected,
         setAccountInfo,
