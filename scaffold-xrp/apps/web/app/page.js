@@ -56,6 +56,19 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 text-white relative overflow-hidden">
+      {/* Admin Access Button */}
+      <div className="absolute top-6 right-6 z-50">
+        <button
+          onClick={() => {
+            localStorage.setItem("xrpl_username", "admin");
+            router.push("/admin");
+          }}
+          className="bg-gray-900/50 hover:bg-blue-900/50 text-blue-300 hover:text-white px-4 py-2 rounded-lg font-mono text-xs border border-blue-500/30 hover:border-blue-400 backdrop-blur-md transition-all tracking-widest uppercase"
+        >
+          Admin_Mode
+        </button>
+      </div>
+
       <BlockchainBackground />
 
       <div className="max-w-md w-full relative z-20">
@@ -100,8 +113,8 @@ export default function Home() {
               type="submit"
               disabled={isLoading}
               className={`w-full relative overflow-hidden group py-4 px-6 rounded-xl font-bold text-lg tracking-wider uppercase transition-all duration-300 ${isLoading
-                  ? "bg-gray-700 cursor-not-allowed text-gray-400"
-                  : "bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.7)]"
+                ? "bg-gray-700 cursor-not-allowed text-gray-400"
+                : "bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.7)]"
                 }`}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">

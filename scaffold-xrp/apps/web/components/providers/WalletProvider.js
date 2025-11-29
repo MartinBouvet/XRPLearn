@@ -52,6 +52,11 @@ export function WalletProvider({ children }) {
     }, 5000);
   }, []);
 
+  const resetMembers = useCallback(() => {
+    localStorage.removeItem("simulation_members");
+    setMembers([]);
+  }, []);
+
   return (
     <WalletContext.Provider
       value={{
@@ -67,6 +72,7 @@ export function WalletProvider({ children }) {
         addLog,
         clearLogs,
         showStatus,
+        resetMembers,
       }}
     >
       {children}
