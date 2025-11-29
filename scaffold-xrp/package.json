@@ -20,5 +20,7 @@
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
   },
-  "packageManager": "pnpm@8.10.0"
+  "dependencies": {
+    "xrpl": "^4.4.3"
+  }
 }
