@@ -8,20 +8,20 @@ export function WalletProvider({ children }) {
   const [walletManager, setWalletManagerState] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [accountInfo, setAccountInfo] = useState(null);
-  const [events, setEvents] = useState([]);
+  const [logs, setLogs] = useState([]);
   const [statusMessage, setStatusMessage] = useState(null);
 
   const setWalletManager = useCallback((manager) => {
     setWalletManagerState(manager);
   }, []);
 
-  const addEvent = useCallback((name, data) => {
-    const timestamp = new Date().toLocaleTimeString();
-    setEvents((prev) => [{ timestamp, name, data }, ...prev]);
+  const addLog = useCallback((message, type = "info", hash = null) => {
+    const time = new Date().toLocaleTimeString();
+    setLogs((prev) => [{ time, message, type, hash }, ...prev]);
   }, []);
 
-  const clearEvents = useCallback(() => {
-    setEvents([]);
+  const clearLogs = useCallback(() => {
+    setLogs([]);
   }, []);
 
   const showStatus = useCallback((message, type) => {
@@ -37,13 +37,13 @@ export function WalletProvider({ children }) {
         walletManager,
         isConnected,
         accountInfo,
-        events,
+        logs,
         statusMessage,
         setWalletManager,
         setIsConnected,
         setAccountInfo,
-        addEvent,
-        clearEvents,
+        addLog,
+        clearLogs,
         showStatus,
       }}
     >
