@@ -46,6 +46,9 @@ export default function Home() {
         })
       });
 
+      // Secure the username immediately
+      localStorage.setItem("xrpl_username", username);
+
       // 2. Join Lobby (Legacy/Redis Set)
       const res = await fetch("/api/lobby/join", {
         method: "POST",
@@ -54,7 +57,6 @@ export default function Home() {
       });
 
       if (res.ok) {
-        localStorage.setItem("xrpl_username", username);
         router.push("/lobby");
       } else {
         alert("Erreur lors de la connexion. Réessaie !");

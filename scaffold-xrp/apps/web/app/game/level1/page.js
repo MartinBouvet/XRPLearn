@@ -39,7 +39,7 @@ const TUTORIAL_STEPS = {
         content: (
             <>
                 <p className="mb-4">
-                    Welcome, initiate. You are about to enter the world of the <strong>XRPL Ledger</strong>.
+                    Welcome, <strong>{username || "initiate"}</strong>. You are about to enter the world of the <strong>XRPL Ledger</strong>.
                 </p>
                 <p>
                     To interact with this digital world, you first need an identity. In the crypto world, this identity is called a <strong>Wallet</strong>.
@@ -123,6 +123,12 @@ export default function Level1() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isMinting, setIsMinting] = useState(false);
     const [showTutorial, setShowTutorial] = useState(true);
+    const [username, setUsername] = useState("");
+
+    useEffect(() => {
+        const storedName = localStorage.getItem("xrpl_username");
+        if (storedName) setUsername(storedName);
+    }, []);
 
     // Reset tutorial when step changes, if there is a tutorial for that step
     useEffect(() => {
