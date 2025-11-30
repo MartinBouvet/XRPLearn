@@ -7,7 +7,7 @@ export function ExplorerSidebar({ wallet, balance, inventory }) {
         <div className="fixed right-0 top-0 h-full w-80 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700 flex flex-col shadow-2xl z-50 transition-colors duration-300">
             <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur">
                 <Tooltip content="This is the Ledger. It records every transaction permanently. In a real blockchain, this history is shared by thousands of computers.">
-                    <h3 className="text-green-400 font-bold text-lg cursor-help">
+                    <h3 className="text-secondary font-bold text-lg cursor-help">
                         &gt; XRPL Explorer
                     </h3>
                 </Tooltip>
@@ -23,7 +23,7 @@ export function ExplorerSidebar({ wallet, balance, inventory }) {
                             <span>{log.time}</span>
                             <span className={`font-bold ${log.type === 'tx' ? 'text-yellow-500' :
                                 log.type === 'success' ? 'text-green-400' :
-                                    log.type === 'error' ? 'text-red-400' : 'text-blue-400'
+                                    log.type === 'error' ? 'text-red-400' : 'text-accent'
                                 }`}>
                                 {log.type.toUpperCase()}
                             </span>
@@ -43,15 +43,15 @@ export function ExplorerSidebar({ wallet, balance, inventory }) {
             {wallet && (
                 <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-100/50 dark:bg-gray-800/50 backdrop-blur-md">
                     <div className="flex items-center gap-2 mb-3">
-                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <div className="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
                         <span className="font-bold text-gray-200 text-sm uppercase tracking-wider">Active Session</span>
                     </div>
 
                     <div className="bg-white dark:bg-gray-900/50 p-2 rounded border border-gray-200 dark:border-gray-700 space-y-2">
                         <Tooltip content="Your Public Address (r...). Think of it like your email address or mailbox. It's safe to share this with anyone to receive funds.">
-                            <div className="bg-white dark:bg-gray-900/50 p-2 rounded border border-gray-200 dark:border-gray-700 cursor-help transition-colors hover:border-blue-500/50">
+                            <div className="bg-white dark:bg-gray-900/50 p-2 rounded border border-gray-200 dark:border-gray-700 cursor-help transition-colors hover:border-primary/50">
                                 <div className="text-[10px] text-gray-500 uppercase mb-1">Public Address</div>
-                                <div className="font-mono text-blue-600 dark:text-blue-300 text-xs truncate select-all" title={wallet.address}>
+                                <div className="font-mono text-primary dark:text-purple-300 text-xs truncate select-all" title={wallet.address}>
                                     {wallet.address}
                                 </div>
                             </div>

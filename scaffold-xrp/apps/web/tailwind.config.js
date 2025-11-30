@@ -8,11 +8,28 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)', 'sans-serif'],
+        display: ['var(--font-space)', 'sans-serif'],
+      },
       colors: {
-        primary: "#23292F",
-        secondary: "#384552",
-        accent: "#4f46e5",
-        xrpl: "#00AAE4",
+        primary: "#8b53fe", // Keeping brand purple
+        secondary: "#02bd65", // Keeping brand green
+        accent: "#5080bc", // Keeping brand blue
+
+        // Organic Palette
+        surface: {
+          light: "#FDFBF7", // Off-white / Cream
+          dark: "#0A0A0B", // Off-black / Charcoal
+          glass: "rgba(255, 255, 255, 0.7)",
+          glassDark: "rgba(10, 10, 11, 0.7)",
+        },
+        content: {
+          primary: "#1A1A1C",
+          secondary: "#5E5E62",
+          light: "#E1E1E3",
+          muted: "#A1A1AA",
+        }
       },
       keyframes: {
         "fade-in": {

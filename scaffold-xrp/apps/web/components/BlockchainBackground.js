@@ -19,12 +19,12 @@ export function BlockchainBackground() {
     }, []);
 
     return (
-        <div className="fixed inset-0 overflow-hidden -z-10 bg-[#0a0a0a]">
+        <div className="fixed inset-0 overflow-hidden -z-10 bg-surface-light dark:bg-surface-dark transition-colors duration-500">
             {/* Grid Floor */}
             <div className="grid-floor"></div>
 
             {/* Ambient Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[100px]"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[100px]"></div>
 
             {/* Floating Cubes */}
             {cubes.map((cube) => (

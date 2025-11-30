@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { BlockchainBackground } from "../components/BlockchainBackground";
+import Image from "next/image";
 
 export default function Home() {
   const [username, setUsername] = useState("");
@@ -70,7 +71,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 text-gray-900 dark:text-white relative overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 text-content-primary dark:text-content-light relative overflow-hidden bg-surface-light dark:bg-surface-dark transition-colors duration-500 selection:bg-primary/20">
       {/* Admin Access Button */}
       <div className="absolute top-6 right-6 z-50">
         <button
@@ -78,34 +79,49 @@ export default function Home() {
             localStorage.setItem("xrpl_username", "admin");
             router.push("/admin");
           }}
-          className="bg-white/50 dark:bg-gray-900/50 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white px-4 py-2 rounded-lg font-mono text-xs border border-blue-200 dark:border-blue-500/30 hover:border-blue-400 backdrop-blur-md transition-all tracking-widest uppercase shadow-sm"
+          className="text-[10px] font-bold tracking-[0.2em] text-content-secondary/50 hover:text-primary dark:text-content-muted/50 dark:hover:text-content-light transition-all duration-300 uppercase hover:tracking-[0.25em]"
         >
-          Admin_Mode
+          Admin Access
         </button>
       </div>
 
       <BlockchainBackground />
 
-      <div className="max-w-md w-full relative z-20">
-        <div className="text-center mb-12">
-          <h1 className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 mb-4 glitch" data-text="XRPL OPERATOR">
-            XRPL OPERATOR
-          </h1>
-          <p className="text-xl text-blue-600 dark:text-blue-200 font-mono tracking-widest uppercase opacity-80">
-            &lt; Initialize Sequence /&gt;
+      <div className="max-w-md w-full relative z-20 flex flex-col items-center">
+        <div className="text-center mb-8 w-full">
+          <div className="flex justify-center mb-4 relative h-48 w-full">
+            <Image
+              src="/logo.png"
+              alt="UnBlock Logo"
+              width={1120}
+              height={268}
+              className="h-48 w-auto object-contain dark:hidden"
+              priority
+            />
+            <Image
+              src="/logo-dark.png"
+              alt="UnBlock Logo"
+              width={1120}
+              height={268}
+              className="h-48 w-auto object-contain hidden dark:block"
+              priority
+            />
+          </div>
+          <p className="text-lg md:text-xl text-content-secondary dark:text-content-muted font-display tracking-tight font-medium leading-relaxed">
+            Initialize Sequence
           </p>
         </div>
 
-        <div className="bg-white/80 dark:bg-gray-900/40 backdrop-blur-xl border border-blue-200 dark:border-blue-500/30 p-8 rounded-3xl shadow-2xl dark:shadow-[0_0_50px_rgba(0,170,228,0.2)] relative group transition-colors duration-300">
-          {/* Corner Accents */}
-          <div className="absolute -top-1 -left-1 w-8 h-8 border-t-2 border-l-2 border-blue-500 rounded-tl-xl"></div>
-          <div className="absolute -top-1 -right-1 w-8 h-8 border-t-2 border-r-2 border-blue-500 rounded-tr-xl"></div>
-          <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-2 border-l-2 border-blue-500 rounded-bl-xl"></div>
-          <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-blue-500 rounded-br-xl"></div>
+        <div className="bg-surface-glass dark:bg-surface-glassDark backdrop-blur-2xl border border-white/40 dark:border-white/5 p-8 md:p-10 rounded-[2rem] shadow-2xl shadow-primary/5 dark:shadow-none relative group transition-all duration-500 hover:shadow-3xl hover:scale-[1.005] w-full">
+          {/* Corner Accents - Subtle */}
+          <div className="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-primary/50 rounded-tl-xl"></div>
+          <div className="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-primary/50 rounded-tr-xl"></div>
+          <div className="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-primary/50 rounded-bl-xl"></div>
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-primary/50 rounded-br-xl"></div>
 
           <form onSubmit={handleJoin} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="username" className="block text-sm font-mono text-blue-600 dark:text-blue-300 uppercase tracking-wider">
+              <label htmlFor="username" className="block text-xs font-bold text-content-secondary dark:text-content-muted mb-3 uppercase tracking-[0.15em] text-center font-display">
                 Identity Protocol
               </label>
               <div className="relative">
@@ -114,13 +130,13 @@ export default function Home() {
                   name="username"
                   type="text"
                   required
-                  className="w-full bg-gray-100 dark:bg-gray-800/50 border border-blue-200 dark:border-blue-500/30 rounded-xl px-4 py-4 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all font-mono text-lg text-center tracking-widest"
-                  placeholder="ENTER_CODENAME"
+                  className="w-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-2xl px-6 py-5 text-content-primary dark:text-content-light placeholder-content-secondary/30 focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all duration-300 font-display text-xl text-center tracking-tight backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
+                  placeholder="Enter Codename"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   autoComplete="off"
                 />
-                <div className="absolute inset-0 rounded-xl bg-blue-500/5 pointer-events-none"></div>
+                <div className="absolute inset-0 rounded-xl bg-purple-500/5 pointer-events-none"></div>
               </div>
             </div>
 
@@ -129,7 +145,7 @@ export default function Home() {
               disabled={isLoading}
               className={`w-full relative overflow-hidden group py-4 px-6 rounded-xl font-bold text-lg tracking-wider uppercase transition-all duration-300 ${isLoading
                 ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed text-gray-500 dark:text-gray-400"
-                : "bg-blue-600 hover:bg-blue-500 text-white shadow-lg dark:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.7)]"
+                : "bg-primary hover:bg-purple-600 text-white shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-[0.98]"
                 }`}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
@@ -149,9 +165,9 @@ export default function Home() {
           </form>
         </div>
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 text-center w-full">
           <p className="text-xs text-gray-500 font-mono">
-            SYSTEM STATUS: <span className="text-green-400">ONLINE</span> | NODES: <span className="text-blue-400">ACTIVE</span>
+            <span className="opacity-50">SYSTEM STATUS:</span> <span className="text-secondary font-bold">ONLINE</span> <span className="mx-2 opacity-30">|</span> <span className="opacity-50">NODES:</span> <span className="text-accent font-bold">ACTIVE</span>
           </p>
         </div>
       </div>

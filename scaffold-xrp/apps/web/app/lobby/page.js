@@ -50,7 +50,7 @@ export default function Lobby() {
                     ⚠️ DEMO MODE (NO DATABASE) - PLAYERS WILL NOT SYNC ⚠️
                 </div>
             )}
-            <h1 className="text-4xl font-bold mb-8 text-blue-400">Waiting Room</h1>
+            <h1 className="text-4xl font-bold mb-8 text-primary">Waiting Room</h1>
 
             <div className="text-2xl mb-12">
                 Welcome, <span className="font-bold text-gray-900 dark:text-white">{pseudo}</span>!
@@ -58,7 +58,7 @@ export default function Lobby() {
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 w-full max-w-4xl">
                 {/* Current Player */}
-                <div className="bg-blue-900/50 border-2 border-blue-500 rounded-full py-3 px-6 text-center animate-pulse">
+                <div className="bg-primary/50 border-2 border-primary rounded-full py-3 px-6 text-center animate-pulse">
                     {pseudo} (Me)
                 </div>
 

@@ -190,7 +190,7 @@ export default function Level3() {
                 {/* Progress Bar */}
                 <div className="w-full max-w-4xl mb-8 bg-gray-200 dark:bg-gray-700 rounded-full h-4 z-10">
                     <div
-                        className="bg-green-500 h-4 rounded-full transition-all duration-500"
+                        className="bg-secondary h-4 rounded-full transition-all duration-500"
                         style={{
                             width:
                                 step === "intro" ? "10%" :
@@ -203,7 +203,7 @@ export default function Level3() {
 
                 {step === "intro" && (
                     <div className="text-center max-w-2xl animate-fade-in z-10">
-                        <h1 className="text-4xl font-bold mb-6 text-green-400">Level 3: The Blockchain</h1>
+                        <h1 className="text-4xl font-bold mb-6 text-secondary">Level 3: The Blockchain</h1>
                         <p className="text-xl mb-8">
                             You've made transactions. But where do they go?
                             <br />
@@ -211,7 +211,7 @@ export default function Level3() {
                         </p>
                         <button
                             onClick={() => setStep("validating")}
-                            className="btn-primary text-xl bg-green-600 hover:bg-green-700"
+                            className="btn-primary text-xl bg-secondary hover:bg-green-700"
                         >
                             Enter the Consensus Chamber
                         </button>
@@ -237,13 +237,13 @@ export default function Level3() {
                             </div>
 
                             {/* Current Block */}
-                            <div className={`relative w-64 h-64 bg-white dark:bg-gray-800 border-4 ${blockSealed ? "border-green-500" : "border-yellow-500"} rounded-xl flex flex-col items-center justify-center transition-all duration-500 shadow-xl dark:shadow-none`}>
+                            <div className={`relative w-64 h-64 bg-white dark:bg-gray-800 border-4 ${blockSealed ? "border-secondary" : "border-yellow-500"} rounded-xl flex flex-col items-center justify-center transition-all duration-500 shadow-xl dark:shadow-none`}>
 
                                 {/* Transactions entering the block */}
                                 <div className={`absolute inset-0 flex flex-col items-center justify-center gap-2 transition-all duration-500 ${blockSealed ? "opacity-0 scale-50" : "opacity-100"}`}>
                                     {transactionsInBlock && (
                                         <>
-                                            <div className="bg-blue-900/80 px-3 py-1 rounded border border-blue-500 text-xs animate-slide-in-right">
+                                            <div className="bg-accent/20 px-3 py-1 rounded border border-accent text-xs animate-slide-in-right">
                                                 Tx: 50 YC ➡️ Vendor
                                             </div>
                                             <div className="bg-red-900/80 px-3 py-1 rounded border border-red-500 text-xs animate-slide-in-left" style={{ animationDelay: "0.2s" }}>
@@ -268,19 +268,19 @@ export default function Level3() {
                                             <Tooltip content="Validators are nodes that vote on the correct order of transactions.">
                                                 🤖
                                             </Tooltip>
-                                            <span className="text-xs bg-green-500 text-black px-1 rounded">VOTE</span>
+                                            <span className="text-xs bg-secondary text-black px-1 rounded">VOTE</span>
                                         </div>
                                         <div className="absolute -top-10 right-10 text-3xl animate-bounce" style={{ animationDelay: "0.3s" }}>
                                             <Tooltip content="Validators are nodes that vote on the correct order of transactions.">
                                                 🤖
                                             </Tooltip>
-                                            <span className="text-xs bg-green-500 text-black px-1 rounded">VOTE</span>
+                                            <span className="text-xs bg-secondary text-black px-1 rounded">VOTE</span>
                                         </div>
                                         <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-3xl animate-bounce" style={{ animationDelay: "0.6s" }}>
                                             <Tooltip content="Validators are nodes that vote on the correct order of transactions.">
                                                 🤖
                                             </Tooltip>
-                                            <span className="text-xs bg-green-500 text-black px-1 rounded">VOTE</span>
+                                            <span className="text-xs bg-secondary text-black px-1 rounded">VOTE</span>
                                         </div>
                                     </>
                                 )}
@@ -294,12 +294,12 @@ export default function Level3() {
                         {!transactionsInBlock ? (
                             <button
                                 onClick={handleValidateBlock}
-                                className="btn-primary text-xl bg-blue-600 hover:bg-blue-700 animate-pulse"
+                                className="btn-primary text-xl bg-primary hover:bg-purple-700 animate-pulse"
                             >
                                 📡 Propose Block
                             </button>
                         ) : (
-                            <div className="text-xl font-mono text-green-400 h-8">
+                            <div className="text-xl font-mono text-secondary h-8">
                                 {chainLinked ? "Block added to the chain!" : blockSealed ? "Consensus Reached!" : validatorsVoting ? "Validating..." : "Packing transactions..."}
                             </div>
                         )}
@@ -317,7 +317,7 @@ export default function Level3() {
                                 <button
                                     key={option.id}
                                     onClick={() => handleQuizAnswer(option.correct)}
-                                    className="p-4 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl border border-gray-300 dark:border-gray-600 text-left transition-all hover:border-green-500 shadow-sm dark:shadow-none"
+                                    className="p-4 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl border border-gray-300 dark:border-gray-600 text-left transition-all hover:border-secondary shadow-sm dark:shadow-none"
                                 >
                                     {option.text}
                                 </button>
@@ -330,7 +330,7 @@ export default function Level3() {
                     <div className="text-center w-full max-w-2xl z-10">
                         <h2 className="text-3xl font-bold mb-8">Perfect!</h2>
                         <div className="text-6xl mb-8 animate-bounce">🛡️</div>
-                        <div className="animate-pulse text-green-400 text-xl mb-8">
+                        <div className="animate-pulse text-secondary text-xl mb-8">
                             Minting 'Guardian' Badge...
                         </div>
                         <div className="flex justify-center">
@@ -341,26 +341,26 @@ export default function Level3() {
 
                 {step === "complete" && (
                     <div className="text-center w-full max-w-2xl z-10 animate-fade-in">
-                        <h2 className="text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
+                        <h2 className="text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">
                             Mission Accomplished! 🚀
                         </h2>
 
                         <div className="mb-12">
-                            <div className="inline-block bg-gradient-to-r from-green-600 to-green-800 border border-green-500 rounded-xl px-8 py-4 text-white font-bold shadow-lg transform hover:scale-105 transition-transform">
+                            <div className="inline-block bg-gradient-to-r from-secondary to-green-800 border border-secondary rounded-xl px-8 py-4 text-white font-bold shadow-lg transform hover:scale-105 transition-transform">
                                 <div className="text-4xl mb-2">🛡️</div>
                                 <div className="text-xl">Final Badge</div>
-                                <div className="text-sm text-green-200">"Guardian"</div>
+                                <div className="text-sm text-green-100">"Guardian"</div>
                             </div>
                         </div>
 
                         <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg">
                             You have mastered the basics of XRPL:
                             <br />
-                            <span className="text-blue-600 dark:text-blue-400">Wallets</span> • <span className="text-yellow-600 dark:text-yellow-400">Transactions</span> • <span className="text-green-600 dark:text-green-400">Blockchain</span>
+                            <span className="text-primary dark:text-purple-400">Wallets</span> • <span className="text-yellow-600 dark:text-yellow-400">Transactions</span> • <span className="text-secondary dark:text-green-400">Blockchain</span>
                         </p>
 
                         <button
-                            className="btn-primary w-full bg-blue-600 hover:bg-blue-700"
+                            className="btn-primary w-full bg-primary hover:bg-purple-700"
                             onClick={() => router.push("/game/community")}
                         >
                             Join the Community

@@ -71,7 +71,7 @@ const getTutorialSteps = (username) => ({
                 </p>
                 <ul className="list-disc pl-5 space-y-2">
                     <li>
-                        <strong className="text-blue-400">Public Address (r...):</strong> Like your email address or IBAN. You can share this with anyone to receive funds.
+                        <strong className="text-primary">Public Address (r...):</strong> Like your email address or IBAN. You can share this with anyone to receive funds.
                     </li>
                     <li>
                         <strong className="text-red-400">Private Key (Secret):</strong> Like your password or PIN. <strong>NEVER</strong> share this. Anyone who has it controls your funds.
@@ -305,7 +305,7 @@ export default function Level1() {
                 {/* Progress Bar */}
                 <div className="w-full max-w-4xl mb-8 bg-gray-200 dark:bg-gray-700 rounded-full h-4 z-10">
                     <div
-                        className="bg-blue-500 h-4 rounded-full transition-all duration-500"
+                        className="bg-secondary h-4 rounded-full transition-all duration-500"
                         style={{
                             width:
                                 step === "intro" ? "5%" :
@@ -386,17 +386,17 @@ export default function Level1() {
                         <div className="flex justify-center mb-6">
                             <WalletIcon color={walletColor} size="md" />
                         </div>
-                        <h2 className="text-4xl font-bold mb-6 text-green-400">
+                        <h2 className="text-4xl font-bold mb-6 text-secondary">
                             Wallet Generated! 🎉
                         </h2>
 
-                        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl mb-8 text-left border border-green-500 relative overflow-hidden shadow-lg dark:shadow-none">
+                        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl mb-8 text-left border border-secondary relative overflow-hidden shadow-lg dark:shadow-none">
                             <div className="absolute top-0 right-0 p-2 opacity-10">
                                 <WalletIcon color={walletColor} size="lg" />
                             </div>
                             <div className="mb-4 relative z-10">
                                 <label className="text-gray-400 text-sm">Address (Public)</label>
-                                <div className="font-mono text-lg break-all text-blue-300">
+                                <div className="font-mono text-lg break-all text-primary dark:text-purple-300">
                                     {wallet.address}
                                 </div>
                             </div>
@@ -418,19 +418,43 @@ export default function Level1() {
                 )}
 
                 {(step === "faucet_loading") && (
-                    <div className="text-center w-full max-w-2xl z-10">
-                        <h2 className="text-3xl font-bold mb-8">Activating Wallet...</h2>
-                        <div className="flex justify-center items-end gap-4 mb-8 h-48">
-                            <div className="text-6xl animate-bounce" style={{ animationDuration: '3s' }}>🚰</div>
-                            <div className="flex flex-col gap-2">
-                                <div className="w-4 h-4 bg-yellow-400 rounded-full animate-bounce delay-100"></div>
-                                <div className="w-4 h-4 bg-yellow-400 rounded-full animate-bounce delay-200"></div>
-                                <div className="w-4 h-4 bg-yellow-400 rounded-full animate-bounce delay-300"></div>
+                    <div className="text-center w-full max-w-2xl z-10 animate-fade-in">
+                        <h2 className="text-3xl font-bold mb-12 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+                            Activating Wallet...
+                        </h2>
+
+                        <div className="relative flex justify-center items-center h-64 mb-12">
+                            {/* Faucet Animation */}
+                            <div className="absolute top-0 transform -translate-y-4">
+                                <div className="text-7xl animate-bounce z-20 relative" style={{ animationDuration: '3s' }}>🚰</div>
+                                {/* Water/Coin Flow */}
+                                <div className="absolute left-1/2 -translate-x-1/2 top-16 flex flex-col items-center gap-3">
+                                    <div className="w-4 h-4 bg-yellow-400 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.8)] animate-drop delay-0"></div>
+                                    <div className="w-4 h-4 bg-yellow-400 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.8)] animate-drop delay-150"></div>
+                                    <div className="w-4 h-4 bg-yellow-400 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.8)] animate-drop delay-300"></div>
+                                </div>
                             </div>
-                            <WalletIcon color={walletColor} size="lg" />
+
+                            {/* Wallet Receiving */}
+                            <div className="absolute bottom-0 transform translate-y-4">
+                                <div className="relative">
+                                    <WalletIcon color={walletColor} size="xl" className="drop-shadow-2xl" />
+                                    {/* Glow effect on wallet */}
+                                    <div className="absolute inset-0 bg-yellow-400/20 blur-xl rounded-full animate-pulse"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="animate-pulse text-yellow-400 text-xl">
-                            {isMinting ? "Minting 'Wallet Creator' Badge..." : "Funding Account..."}
+
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-center gap-3 text-yellow-400 text-xl font-mono">
+                                <span className="animate-spin">⚙️</span>
+                                <span>
+                                    {isMinting ? "Minting 'Wallet Creator' Badge..." : "Funding Account on Testnet..."}
+                                </span>
+                            </div>
+                            <div className="w-full bg-gray-700 rounded-full h-2 max-w-md mx-auto overflow-hidden">
+                                <div className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 animate-progress-indeterminate"></div>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -440,10 +464,10 @@ export default function Level1() {
                         <h2 className="text-3xl font-bold mb-8 text-yellow-400">Wallet Activated!</h2>
 
                         <div className="mb-8 animate-bounce">
-                            <div className="inline-block bg-gradient-to-r from-blue-600 to-blue-800 border border-blue-500 rounded-xl px-8 py-4 text-white font-bold shadow-lg transform hover:scale-105 transition-transform cursor-pointer">
+                            <div className="inline-block bg-gradient-to-r from-primary to-purple-800 border border-primary rounded-xl px-8 py-4 text-white font-bold shadow-lg transform hover:scale-105 transition-transform cursor-pointer">
                                 <div className="text-3xl mb-2">🛡️</div>
                                 <div className="text-xl">Badge Received</div>
-                                <div className="text-sm text-blue-200">"Wallet Creator"</div>
+                                <div className="text-sm text-purple-200">"Wallet Creator"</div>
                             </div>
                         </div>
 
@@ -479,13 +503,13 @@ export default function Level1() {
                                 {/* Public Key Card */}
                                 <div
                                     onClick={() => handleCardClick("public")}
-                                    className="w-48 h-64 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl border-2 border-blue-400 shadow-xl cursor-pointer transform transition-all duration-300 hover:-translate-y-16 hover:rotate-[-5deg] hover:z-20 z-10 flex flex-col items-center justify-center p-4 group"
+                                    className="w-48 h-64 bg-gradient-to-br from-primary to-purple-800 rounded-xl border-2 border-primary shadow-xl cursor-pointer transform transition-all duration-300 hover:-translate-y-16 hover:rotate-[-5deg] hover:z-20 z-10 flex flex-col items-center justify-center p-4 group"
                                 >
                                     <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">📢</div>
                                     <h3 className="text-xl font-bold text-white mb-2">Public Address</h3>
-                                    <div className="w-full h-2 bg-blue-900/50 rounded mb-2"></div>
-                                    <div className="w-2/3 h-2 bg-blue-900/50 rounded"></div>
-                                    <p className="text-xs text-blue-200 mt-4">rAddress...</p>
+                                    <div className="w-full h-2 bg-purple-900/50 rounded mb-2"></div>
+                                    <div className="w-2/3 h-2 bg-purple-900/50 rounded"></div>
+                                    <p className="text-xs text-purple-200 mt-4">rAddress...</p>
                                 </div>
 
                                 {/* Private Key Card */}
@@ -531,13 +555,13 @@ export default function Level1() {
 
                 {step === "level_complete" && (
                     <div className="text-center w-full max-w-2xl z-10 animate-fade-in">
-                        <h2 className="text-4xl font-bold mb-6 text-green-400">
+                        <h2 className="text-4xl font-bold mb-6 text-secondary">
                             Level 1 Complete! 🏆
                         </h2>
 
                         <div className="flex justify-center gap-8 mb-12">
                             <div className="animate-bounce" style={{ animationDelay: "0s" }}>
-                                <div className="inline-block bg-gradient-to-r from-blue-600 to-blue-800 border border-blue-500 rounded-xl px-4 py-4 text-white font-bold shadow-lg">
+                                <div className="inline-block bg-gradient-to-r from-primary to-purple-800 border border-primary rounded-xl px-4 py-4 text-white font-bold shadow-lg">
                                     <div className="text-3xl mb-2">🛡️</div>
                                     <div className="text-sm">Wallet Creator</div>
                                 </div>
@@ -555,7 +579,7 @@ export default function Level1() {
                         </p>
 
                         <button
-                            className="btn-primary w-full bg-green-600 hover:bg-green-700"
+                            className="btn-primary w-full bg-secondary hover:bg-green-700"
                             onClick={() => router.push("/game/level2")}
                         >
                             Continue to Level 2

@@ -15,19 +15,19 @@ export default function Level3_Blockchain() {
     return (
         <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
             {step === "VISUALIZER" && (
-                <div className="p-8 bg-gray-800 rounded-xl border border-green-500 animate-pulse">
+                <div className="p-8 bg-white dark:bg-gray-800 rounded-xl border border-secondary animate-pulse">
                     <h2 className="text-2xl mb-4">Création du Bloc...</h2>
-                    {gameState.history.map((tx, i) => <div key={i} className="font-mono text-green-400">{tx.hash}</div>)}
+                    {gameState.history.map((tx, i) => <div key={i} className="font-mono text-secondary">{tx.hash}</div>)}
                 </div>
             )}
 
             {step === "QUIZ" && (
                 <div className="space-y-4">
                     <h3 className="text-2xl">Pourquoi le Hash ?</h3>
-                    <button onClick={() => { awardBadge("Architect"); setStep("SUCCESS"); }} className="block w-full p-4 bg-gray-700 hover:bg-green-600 rounded">
+                    <button onClick={() => { awardBadge("Architect"); setStep("SUCCESS"); }} className="block w-full p-4 bg-gray-100 dark:bg-gray-700 hover:bg-secondary rounded hover:text-white transition-colors">
                         Pour rendre l'historique immuable
                     </button>
-                    <button onClick={() => alert("Faux")} className="block w-full p-4 bg-gray-700 hover:bg-red-600 rounded">
+                    <button onClick={() => alert("Faux")} className="block w-full p-4 bg-gray-100 dark:bg-gray-700 hover:bg-red-600 rounded hover:text-white transition-colors">
                         Pour faire joli
                     </button>
                 </div>
@@ -39,7 +39,7 @@ export default function Level3_Blockchain() {
                     <div className="flex justify-center gap-4 text-4xl mb-8">
                         {gameState.badges.map(b => <span key={b}>🏅</span>)}
                     </div>
-                    <button onClick={() => router.push('/')} className="text-blue-400 underline">Retour Accueil</button>
+                    <button onClick={() => router.push('/')} className="text-primary underline">Retour Accueil</button>
                 </div>
             )}
         </div>

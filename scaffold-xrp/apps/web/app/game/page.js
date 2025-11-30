@@ -9,10 +9,10 @@ function GameContainer() {
     const { gameState } = useGame();
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white p-4">
-            <header className="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-4">
+            <header className="flex justify-between items-center mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
                 <h1 className="text-xl font-bold">Niveau {gameState.currentLevel}/3</h1>
-                <div className="font-bold text-blue-400">{gameState.username}</div>
+                <div className="font-bold text-primary">{gameState.username}</div>
             </header>
             <main>
                 {gameState.currentLevel === 1 && <Level1_Identity />}
