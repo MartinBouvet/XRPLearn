@@ -89,13 +89,13 @@ export default function Home() {
 
       <div className="max-w-md w-full relative z-20 flex flex-col items-center">
         <div className="text-center mb-8 w-full">
-          <div className="flex justify-center mb-4 relative h-48 w-full">
+          <div className="flex justify-center mb-4 relative h-72 w-full">
             <Image
               src="/logo.png"
               alt="UnBlock Logo"
               width={1120}
               height={268}
-              className="h-48 w-auto object-contain dark:hidden"
+              className="h-72 w-auto object-contain dark:hidden"
               priority
             />
             <Image
@@ -103,7 +103,7 @@ export default function Home() {
               alt="UnBlock Logo"
               width={1120}
               height={268}
-              className="h-48 w-auto object-contain hidden dark:block"
+              className="h-72 w-auto object-contain hidden dark:block"
               priority
             />
           </div>
